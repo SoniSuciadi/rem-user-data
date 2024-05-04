@@ -134,4 +134,50 @@ export class LandService {
       { projectId },
     );
   }
+  getStakeholder(projectId: string) {
+    return this.db.manyOrNone(
+      `
+            WITH last_land_version AS (
+                SELECT
+                    *
+                FROM (
+                    SELECT
+                        *,
+                        row_number() OVER (PARTITION BY land_id ORDER BY created_at DESC) AS rn
+                FROM
+                    rem_land_versions) t
+                WHERE
+                    t.rn = 1
+            )
+        SELECT 
+            l.uuid AS "ID Tanah",
+            ms.phase AS "Tahap",
+            lv.plot_number AS "No Plot",
+            s.name AS "Nama stakeholder",
+            s.phone_number AS "No hp",
+            s.address AS "Alamat",
+            s.accounts->0->>'name' AS "Pemiliki Rekening",
+            s.accounts->0->>'bank' AS "Bank",
+            s.accounts->0->>'accountNumber' AS "No Rekening",
+            s.accounts->0->>'branch' AS "Cabang",
+            MAX(CASE WHEN dc.name = 'Kartu Keluarga' THEN ld.file->>'url' ELSE NULL END) AS "KK",
+            MAX(CASE WHEN dc.name = 'Kartu Tanda Penduduk' THEN ld.file->>'url' ELSE NULL END) AS "KTP",
+            MAX(CASE WHEN dc.name = 'Paspor' THEN ld.file->>'url' ELSE NULL END) AS "Paspor",
+            MAX(CASE WHEN dc.name = 'Surat Izin Mengemudi' THEN ld.file->>'url' ELSE NULL END) AS "SIM"
+        FROM 
+            rem_stakeholders s
+        LEFT JOIN rem_land_documents ld ON ld.stakeholder_id = s.id
+        LEFT JOIN rem_document_categories dc ON dc.id = ld.document_category_id
+        LEFT JOIN rem_lands_stakeholders ls ON ls.stakeholder_id=s.id
+        LEFT JOIN rem_lands l ON l.id=ls.land_id
+        LEFT JOIN last_land_version lv ON lv.land_id=l.id
+        LEFT JOIN rem_land_stages lstg ON lstg.land_version_id =lv.id
+        LEFT JOIN rem_master_stages ms ON ms.id=lstg.stage_id
+        WHERE s.project_Id=$<projectId>
+        GROUP BY 
+            s.id, s.name, s.phone_number, s.address, s.accounts,l.uuid,ms.phase,lv.plot_number
+        `,
+      { projectId },
+    );
+  }
 }

@@ -8,7 +8,15 @@ export class LandController {
   async getLandList(@Param('projectId') projectId: string) {
     const data = await this.landService.getLandList(projectId);
     return {
-      message: 'Success get list stage',
+      message: 'Success get list land',
+      data,
+    };
+  }
+  @Get('/:projectId/stakeholder')
+  async getStakeholder(@Param('projectId') projectId: string) {
+    const data = await this.landService.getStakeholder(projectId);
+    return {
+      message: 'Success get list stakeholder',
       data,
     };
   }
