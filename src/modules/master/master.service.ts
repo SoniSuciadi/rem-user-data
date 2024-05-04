@@ -10,7 +10,7 @@ export class MasterService {
     this.db = databaseService.db;
   }
 
-  getStage(projectId: string) {
+  getStages(projectId: string) {
     return this.db.manyOrNone(
       `
         SELECT 
@@ -18,6 +18,76 @@ export class MasterService {
             start_date AS "Tanggal Mulai Project "
         FROM rem_master_stages
         WHERE project_id=$<projectId>
+        `,
+      { projectId },
+    );
+  }
+  getClusters(projectId: string) {
+    return this.db.manyOrNone(
+      `
+        SELECT 
+            name AS "Nama cluster"
+        FROM rem_master_clusters
+        WHERE project_id=$<projectId>
+        `,
+      { projectId },
+    );
+  }
+  getBloks(projectId: string) {
+    return this.db.manyOrNone(
+      `
+        SELECT 
+            name AS "Nama blok"
+        FROM rem_master_blocks
+        WHERE project_id=$<projectId>
+        `,
+      { projectId },
+    );
+  }
+  getUnits(projectId: string) {
+    return this.db.manyOrNone(
+      `
+     SELECT
+      coalesce(cast(ot.detail ->> 'buildingArea' AS text) || '/' || cast(ot.detail ->> 'landArea' AS text) || ' ' || ot.name, '') AS "Tipe unit",
+      ot.detail ->> 'landArea' AS "Luas Tanah",
+      ot.detail ->> 'buildingArea' AS "Luas Bangunan",
+      ot.name AS "Nama Desain",
+      ot.detail ->> 'widthField' AS "Lebar Bidang ",
+      ot.detail ->> 'lengthField' AS "Panjang Bidang"
+    FROM
+      rem_object_types ot
+    WHERE
+      development_object_id = 3
+        `,
+      { projectId },
+    );
+  }
+  getFacilities(projectId: string) {
+    return this.db.manyOrNone(
+      `
+      SELECT
+        name AS "Nama Tipe",
+        detail ->> 'volume' AS "Luas",
+        detail ->> 'uom' AS "Satuan"
+      FROM
+        rem_object_types ot
+      WHERE
+        development_object_id = 2
+        `,
+      { projectId },
+    );
+  }
+  getInfrastructure(projectId: string) {
+    return this.db.manyOrNone(
+      `
+       SELECT
+        name AS "Nama Tipe",
+        detail ->> 'volume' AS "Luas",
+        detail ->> 'uom' AS "Satuan"
+      FROM
+        rem_object_types ot
+      WHERE
+        development_object_id = 2
         `,
       { projectId },
     );
