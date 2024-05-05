@@ -1,0 +1,6 @@
+dist
+node_modules
+.env
+.yarn
+.yarnrc.yml
+.DS_Store
