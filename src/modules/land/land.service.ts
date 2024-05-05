@@ -180,4 +180,103 @@ export class LandService {
       { projectId },
     );
   }
+  getLandPayment(projectId: string) {
+    return this.db.manyOrNone(
+      `
+        WITH last_land_version AS (
+            SELECT
+                *
+            FROM (
+                SELECT
+                    *,
+                    row_number() OVER (PARTITION BY land_id ORDER BY created_at DESC) AS rn
+            FROM
+                rem_land_versions) t
+            WHERE
+                t.rn = 1
+        )
+        SELECT
+            l.uuid AS "Id Tanah",
+            ms.phase AS "Tahap",
+            lv.plot_number AS "No Plot",
+            lp.date AS "Tgl Pembayaran",
+            lpd.category AS "Tipe",
+            lp.detail -> 'bankAccount' ->> 'bank' AS "Bank",
+            lp.detail -> 'bankAccount' ->> 'name' AS "Atas nama",
+            lp.detail ->> 'description' AS "Catatan"
+        FROM
+            rem_land_payment_details lpd
+            LEFT JOIN rem_land_payments lp ON lpd.payment_id = lp.id
+            LEFT JOIN rem_lands l ON l.id = lp.land_id
+            LEFT JOIN last_land_version lv ON l.id = lv.land_id
+            LEFT JOIN rem_land_stages ls ON ls.land_version_id = lv.id
+            LEFT JOIN rem_master_stages ms ON ms.id = ls.stage_id
+        WHERE l.project_Id=$<projectId> AND lpd.deleted_at IS NULL
+        `,
+      { projectId },
+    );
+  }
+  getLandBill(projectId: string) {
+    return this.db.manyOrNone(
+      `
+        WITH
+        last_land_version AS (
+            SELECT
+            *
+            FROM
+            (
+                SELECT
+                *,
+                row_number() OVER (
+                    PARTITION BY
+                    land_id
+                    ORDER BY
+                    created_at DESC
+                ) AS rn
+                FROM
+                rem_land_versions
+            ) t
+            WHERE
+            t.rn = 1
+        )
+        SELECT
+        l.uuid AS "Id Tanah",
+        ms.phase AS "Tahap",
+        lv.plot_number AS "No Plot",
+        lb.name AS "Info Tagihan",
+        lb.amount AS "Nominal Tagihan",
+        lb.due_at AS "Jatuh Tempo",
+        lb.proof AS "Bukti Pembayaran",
+        lb.name AS "Tagihan",
+        lpd.category AS "Kategori",
+        lpd.amount AS "Nominal Pembayaran",
+        lp.method AS "Metode Pembayaran",
+        lp.detail -> 'bankAccount' ->> 'name' AS "Penerima",
+        lp.detail->>'location' AS "Lokasi pembayaran",
+        COALESCE(lp.detail -> 'bankAccount' ->> 'accountNumber',lp.detail -> 'cek_giro' ->> 'receiver_account') AS "Nomor rekening",
+        lp.date AS "Tanggal transaksi",
+        COALESCE(lp.detail -> 'bankAccount' ->> 'bank',lp.detail -> 'cek_giro' ->> 'receiver_bank') AS "Bank Penerima",
+        lp.detail -> 'cek_giro' ->> 'issuer' AS "PT Penerbit",
+        lp.detail -> 'cek_giro' ->> 'issuer_bank' AS "Bank Penerbit",
+        lp.detail -> 'cek_giro' ->> 'number' AS "Nomor cek/giro",
+        lp.detail -> 'cek_giro' ->> 'amount' AS "Nominal cek/giro",
+        lp.detail -> 'cek_giro' ->> 'creation_date' AS "Tangal dibuat",
+        lp.detail -> 'cek_giro' ->> 'issuer_account' AS "No. rekening penerbit",
+        lp.detail -> 'cek_giro' ->> 'disbursment_date' AS "tanggal pencairan",
+        lp.detail ->> 'description' AS "Catatan",
+        lp.proof AS "Bukti pembayaran"
+        FROM
+        rem_land_payment_details lpd
+        LEFT JOIN rem_land_payments lp ON lpd.payment_id = lp.id
+        LEFT JOIN rem_land_bills lb ON lb.id = lpd.bill_id
+        LEFT JOIN rem_lands l ON l.id = lp.land_id
+        LEFT JOIN last_land_version lv ON l.id = lv.land_id
+        LEFT JOIN rem_land_stages ls ON ls.land_version_id = lv.id
+        LEFT JOIN rem_master_stages ms ON ms.id = ls.stage_id
+        WHERE
+        l.project_Id = $<projectId> AND lpd.deleted_at IS NULL
+      `,
+      { projectId },
+    );
+  }
 }

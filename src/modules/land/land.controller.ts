@@ -20,4 +20,20 @@ export class LandController {
       data,
     };
   }
+  @Get('/:projectId/land-payment')
+  async getLandPayment(@Param('projectId') projectId: string) {
+    const data = await this.landService.getLandPayment(projectId);
+    return {
+      message: 'Success get land payment list',
+      data,
+    };
+  }
+  @Get('/:projectId/land-bill')
+  async getLandBill(@Param('projectId') projectId: string) {
+    const data = await this.landService.getLandBill(projectId);
+    return {
+      message: 'Success get land bill',
+      data,
+    };
+  }
 }
