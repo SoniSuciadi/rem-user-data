@@ -1,36 +1,36 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { LandService } from './land.service';
 
 @Controller('land')
 export class LandController {
   constructor(private readonly landService: LandService) {}
-  @Get('/:projectId/land-list')
-  async getLandList(@Param('projectId') projectId: string) {
-    const data = await this.landService.getLandList(projectId);
+  @Get('/land-list')
+  async getLandList() {
+    const data = await this.landService.getLandList();
     return {
       message: 'Success get list land',
       data,
     };
   }
-  @Get('/:projectId/stakeholder')
-  async getStakeholder(@Param('projectId') projectId: string) {
-    const data = await this.landService.getStakeholder(projectId);
+  @Get('/stakeholder')
+  async getStakeholder() {
+    const data = await this.landService.getStakeholder();
     return {
       message: 'Success get list stakeholder',
       data,
     };
   }
-  @Get('/:projectId/land-payment')
-  async getLandPayment(@Param('projectId') projectId: string) {
-    const data = await this.landService.getLandPayment(projectId);
+  @Get('/land-payment')
+  async getLandPayment() {
+    const data = await this.landService.getLandPayment();
     return {
       message: 'Success get land payment list',
       data,
     };
   }
-  @Get('/:projectId/land-bill')
-  async getLandBill(@Param('projectId') projectId: string) {
-    const data = await this.landService.getLandBill(projectId);
+  @Get('/land-bill')
+  async getLandBill() {
+    const data = await this.landService.getLandBill();
     return {
       message: 'Success get land bill',
       data,

@@ -9,7 +9,7 @@ export class LandService {
   constructor(private readonly databaseService: DatabaseService) {
     this.db = databaseService.db;
   }
-  getLandList(projectId: string) {
+  getLandList() {
     return this.db.manyOrNone(
       `
             CREATE OR REPLACE FUNCTION get_document_url (data jsonb, doc_name text)
@@ -129,12 +129,11 @@ export class LandService {
                 LEFT JOIN rem_stakeholders s ON s.id = lsh.stakeholder_id
                 LEFT JOIN payment_summary ps ON ps.land_id = l.id
                 LEFT JOIN land_stakeholder_list lsl ON lsl.land_id=l.id
-            WHERE l.project_Id=$<projectId>
+            WHERE l.project_Id=1
         `,
-      { projectId },
     );
   }
-  getStakeholder(projectId: string) {
+  getStakeholder() {
     return this.db.manyOrNone(
       `
             WITH last_land_version AS (
@@ -173,14 +172,13 @@ export class LandService {
         LEFT JOIN last_land_version lv ON lv.land_id=l.id
         LEFT JOIN rem_land_stages lstg ON lstg.land_version_id =lv.id
         LEFT JOIN rem_master_stages ms ON ms.id=lstg.stage_id
-        WHERE s.project_Id=$<projectId>
+        WHERE s.project_Id=1
         GROUP BY 
             s.id, s.name, s.phone_number, s.address, s.accounts,l.uuid,ms.phase,lv.plot_number
         `,
-      { projectId },
     );
   }
-  getLandPayment(projectId: string) {
+  getLandPayment() {
     return this.db.manyOrNone(
       `
         WITH last_land_version AS (
@@ -211,12 +209,11 @@ export class LandService {
             LEFT JOIN last_land_version lv ON l.id = lv.land_id
             LEFT JOIN rem_land_stages ls ON ls.land_version_id = lv.id
             LEFT JOIN rem_master_stages ms ON ms.id = ls.stage_id
-        WHERE l.project_Id=$<projectId> AND lpd.deleted_at IS NULL
+        WHERE l.project_Id=1 AND lpd.deleted_at IS NULL
         `,
-      { projectId },
     );
   }
-  getLandBill(projectId: string) {
+  getLandBill() {
     return this.db.manyOrNone(
       `
         WITH
@@ -274,9 +271,8 @@ export class LandService {
         LEFT JOIN rem_land_stages ls ON ls.land_version_id = lv.id
         LEFT JOIN rem_master_stages ms ON ms.id = ls.stage_id
         WHERE
-        l.project_Id = $<projectId> AND lpd.deleted_at IS NULL
+        l.project_Id = 1 AND lpd.deleted_at IS NULL
       `,
-      { projectId },
     );
   }
 }

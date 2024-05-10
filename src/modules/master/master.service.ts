@@ -10,41 +10,38 @@ export class MasterService {
     this.db = databaseService.db;
   }
 
-  getStages(projectId: string) {
+  getStages() {
     return this.db.manyOrNone(
       `
         SELECT 
             phase AS "Tahap",
             start_date AS "Tanggal Mulai Project "
         FROM rem_master_stages
-        WHERE project_id=$<projectId>
+        WHERE project_id=1
         `,
-      { projectId },
     );
   }
-  getClusters(projectId: string) {
+  getClusters() {
     return this.db.manyOrNone(
       `
         SELECT 
             name AS "Nama cluster"
         FROM rem_master_clusters
-        WHERE project_id=$<projectId>
+        WHERE project_id=1
         `,
-      { projectId },
     );
   }
-  getBloks(projectId: string) {
+  getBloks() {
     return this.db.manyOrNone(
       `
         SELECT 
             name AS "Nama blok"
         FROM rem_master_blocks
-        WHERE project_id=$<projectId>
+        WHERE project_id=1
         `,
-      { projectId },
     );
   }
-  getUnits(projectId: string) {
+  getUnits() {
     return this.db.manyOrNone(
       `
      SELECT
@@ -59,10 +56,9 @@ export class MasterService {
     WHERE
       development_object_id = 3
         `,
-      { projectId },
     );
   }
-  getFacilities(projectId: string) {
+  getFacilities() {
     return this.db.manyOrNone(
       `
       SELECT
@@ -74,10 +70,9 @@ export class MasterService {
       WHERE
         development_object_id = 2
         `,
-      { projectId },
     );
   }
-  getInfrastructure(projectId: string) {
+  getInfrastructure() {
     return this.db.manyOrNone(
       `
        SELECT
@@ -89,7 +84,6 @@ export class MasterService {
       WHERE
         development_object_id = 2
         `,
-      { projectId },
     );
   }
 }
