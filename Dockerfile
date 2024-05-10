@@ -17,7 +17,6 @@ ENV PORT=4000 \
 RUN yarn config set network-timeout 600000 
 RUN yarn install --production=true --verbose
 
-RUN yarn add sharp --ignore-engines
 
 EXPOSE 4000
 

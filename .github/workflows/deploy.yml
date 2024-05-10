@@ -1,7 +1,7 @@
-name: Build & Deploy
+name: Build & Deploy Stg
 
 concurrency:
-  group: deploy
+  group: stg-deploy
   cancel-in-progress: true
 
 on:
