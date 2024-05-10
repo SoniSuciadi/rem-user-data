@@ -1,0 +1,51 @@
+name: Build & Deploy
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ['development']
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install Depedencies
+        run: yarn install --frozen-lockfile
+      - name: Build App
+        run: yarn build
+
+      - name: Compress To Tar
+        uses: a7ul/tar-action@v1.1.0
+        with:
+          command: c
+          cwd: './'
+          files: |
+            dist
+            prisma
+            package.json
+            yarn.lock
+            Dockerfile
+            captain-definition
+            .dockerignore
+          outPath: deploy.tar
+
+      - name: Deploy App to CapRover
+        uses: caprover/deploy-from-github@main
+        with:
+          server: 'https://captain.stg.happyhomes.id'
+          app: 'rem-user-data'
+          token: '${{secrets.REM_USER_DATA_TOKEN}}'
