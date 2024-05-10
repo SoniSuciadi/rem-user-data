@@ -40,7 +40,7 @@ export class MasterController {
   async getFacilities() {
     const data = await this.masterService.getFacilities();
     return {
-      message: 'Success get list blok',
+      message: 'Success get list facilities',
       data,
     };
   }
@@ -48,7 +48,7 @@ export class MasterController {
   async getInfrastructure() {
     const data = await this.masterService.getInfrastructure();
     return {
-      message: 'Success get list blok',
+      message: 'Success get list infrastructure',
       data,
     };
   }
