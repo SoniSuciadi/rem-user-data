@@ -104,7 +104,6 @@ export class LandService {
                 ps.bayar AS "Total Pembayaran",
                 ps.kompensasi AS "Total Kompensasi",
                 ps.denda AS "Total Denda",
-                ps.lain_lain AS "Total Pembayaran Lain",
                 get_document_url (llv.milestone -> 'pre_acquisition', 'Kartu Keluarga') AS "KK Pemilik",
                 get_document_url (llv.milestone -> 'pre_acquisition', 'Kartu Tanda Penduduk') AS "KTP Pemilik",
                 get_document_url (llv.milestone -> 'pre_acquisition', 'Surat Pemberitahuan Pajak Terhutang Pajak Bumi dan Bangunan') AS "SPPT PBB",
@@ -155,14 +154,14 @@ export class LandService {
             s.name AS "Nama stakeholder",
             s.phone_number AS "No hp",
             s.address AS "Alamat",
-            s.accounts->0->>'name' AS "Pemiliki Rekening",
-            s.accounts->0->>'bank' AS "Bank",
-            s.accounts->0->>'accountNumber' AS "No Rekening",
-            s.accounts->0->>'branch' AS "Cabang",
             MAX(CASE WHEN dc.name = 'Kartu Keluarga' THEN ld.file->>'url' ELSE NULL END) AS "KK",
             MAX(CASE WHEN dc.name = 'Kartu Tanda Penduduk' THEN ld.file->>'url' ELSE NULL END) AS "KTP",
             MAX(CASE WHEN dc.name = 'Paspor' THEN ld.file->>'url' ELSE NULL END) AS "Paspor",
-            MAX(CASE WHEN dc.name = 'Surat Izin Mengemudi' THEN ld.file->>'url' ELSE NULL END) AS "SIM"
+            MAX(CASE WHEN dc.name = 'Surat Izin Mengemudi' THEN ld.file->>'url' ELSE NULL END) AS "SIM",
+            s.accounts->0->>'name' AS "Pemiliki Rekening",
+            s.accounts->0->>'bank' AS "Bank",
+            s.accounts->0->>'accountNumber' AS "No Rekening",
+            s.accounts->0->>'branch' AS "Cabang"
         FROM 
             rem_stakeholders s
         LEFT JOIN rem_land_documents ld ON ld.stakeholder_id = s.id
@@ -201,6 +200,7 @@ export class LandService {
             lpd.category AS "Tipe",
             lp.detail -> 'bankAccount' ->> 'bank' AS "Bank",
             lp.detail -> 'bankAccount' ->> 'name' AS "Atas nama",
+            lp.proof AS "BUKTI PEMBAYARAN",
             lp.detail ->> 'description' AS "Catatan"
         FROM
             rem_land_payment_details lpd

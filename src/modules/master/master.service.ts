@@ -68,7 +68,7 @@ export class MasterService {
       FROM
         rem_object_types ot
       WHERE
-        development_object_id = 2
+        development_object_id = 1
         `,
     );
   }
