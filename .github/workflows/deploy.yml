@@ -35,7 +35,6 @@ jobs:
           cwd: './'
           files: |
             dist
-            prisma
             package.json
             yarn.lock
             Dockerfile
