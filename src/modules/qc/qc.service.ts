@@ -39,7 +39,7 @@ export class QcService {
                     id = master_block_id
             ) AS "Output",
             e.updated_by AS "Nama Pengawas",
-            oo.contractor_id AS "contractor_id", 
+            oo.contractor_id AS "Nama Kontraktor", 
             e.passed,
             e.failed,
             e.unstarted,
@@ -59,10 +59,13 @@ export class QcService {
       contractorMap.set(contractor.id, contractor.name);
     });
 
-    const result = data.map((item) => ({
-      ...item,
-      'Nama Kontraktor': contractorMap.get(item.contractor_id) || 'Unknown',
-    }));
+    const result = data.map((item) => {
+      return {
+        ...item,
+        'Nama Kontraktor':
+          contractorMap.get(item['Nama Kontraktor']) || 'Unknown',
+      };
+    });
 
     return result;
   }
