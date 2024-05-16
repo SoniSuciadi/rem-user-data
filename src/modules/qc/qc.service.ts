@@ -29,7 +29,7 @@ export class QcService {
             ms.phase AS "Tahap",
             mc.name AS "Cluster",
             rdo.name AS "Tipe Konstruksi",
-            (cast(ot.detail ->> 'buildingArea' AS text) || '/' || cast(ot.detail ->> 'landArea' AS text) || ' ' || ot.name) AS "Sub-Tipe Konstruksi",
+            COALESCE((cast(ot.detail ->> 'buildingArea' AS text) || '/' || cast(ot.detail ->> 'landArea' AS text) || ' ' || ot.name),ot.name) AS "Sub-Tipe Konstruksi",
             (
                 SELECT
                     name || '/' || oo.name
