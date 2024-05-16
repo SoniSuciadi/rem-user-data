@@ -50,7 +50,8 @@ export class QcService {
         LEFT JOIN rem_projects p ON p.id = ms.project_id
         LEFT JOIN rem_master_clusters mc ON mc.id = oo.master_cluster_id
         LEFT JOIN rem_object_types ot ON ot.id = oo.object_type_id
-        LEFT JOIN rem_development_objects rdo ON rdo.id = ot.development_object_id;
+        LEFT JOIN rem_development_objects rdo ON rdo.id = ot.development_object_id
+        WHERE p.id=1
       `,
     );
 
