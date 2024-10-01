@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { PricelistService } from './cluster.service';
+import { PricelistService } from './pricelist.service';
 
 @Controller('crm/pricelist')
 export class PricelistController {
