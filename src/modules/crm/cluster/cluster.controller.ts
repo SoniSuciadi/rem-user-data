@@ -17,6 +17,10 @@ export class ClusterController {
 
   @Post()
   async createCluster(@Body() body: CreateClusterDto) {
-    
+    const data = await this.ClusterService.createCluster(body);
+    return {
+      message: 'Success create crm cluster',
+      data,
+    };
   }
 }

@@ -1,4 +1,4 @@
-import { dbPocketbase } from 'src/common/helpers/crm.helper';
+import { crmCreate, dbPocketbase } from 'src/common/helpers/crm.helper';
 import { CreateClusterDto } from './dto/cluster.dto';
 import { BadRequestException } from '@nestjs/common';
 
@@ -25,14 +25,29 @@ export class ClusterService {
       q: `
       SELECT 
         c.id,
-        p."name" AS "project",
+        p."name" AS "project"
       FROM cms_clusters c
       JOIN cms_projects p ON c."projectId" = p.id
       WHERE c.name = '${name}' AND c."projectId" = '${projectId}'
       `,
-    }).catch((err) => null);
-    console.log(findSameName);
+    });
+
     if (findSameName)
       throw new BadRequestException(`Cluster ${name} sudah ada`);
+
+    const createData = await crmCreate({
+      collection: 'cms_clusters',
+      data: {
+        name,
+        projectId,
+        stageId,
+        minNoNUP: 1,
+      },
+    });
+
+    return {
+      id: createData?.data?.id,
+      name: name,
+    };
   }
 }
