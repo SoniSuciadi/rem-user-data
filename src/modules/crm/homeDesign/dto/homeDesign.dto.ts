@@ -21,7 +21,7 @@ export class CreateHomeDesignDto {
   name: string;
 
   @ApiProperty({
-    example: 50,
+    example: 40,
   })
   @IsNumber()
   buildingArea: number;
@@ -33,7 +33,7 @@ export class CreateHomeDesignDto {
   fieldWidth: number;
 
   @ApiProperty({
-    example: 10,
+    example: 7,
   })
   @IsNumber()
   fieldLength: number;
