@@ -14,33 +14,40 @@ export class HomeDesignService {
   }
 
   async createHomeDesign(arg: CreateHomeDesignDto) {
+    const { name } = arg;
     const detailUnit = {
-      bakKM: '',
-      doorWindow: 'Kusen Aluminium',
-      finishingWall: 'Cat Dinding',
-      floor: '40cm x 40cm',
-      floorNumber: '1',
-      foundation: 'Batu Kali Menerus',
-      kusenKM: 'PVC',
-      listric: '2200',
-      plafon: 'Gypsum',
-      road: 'Paving',
-      roadWidth: '6.5',
-      roof: 'Rangka Atap Galvalum',
-      sanitize: 'Closet duduk',
-      securitySystem: 'CCTV 24 jam',
-      structure: 'Beton Bertulang',
-      wall: 'Bata Ringan',
-      wallType: 'Hebel',
-      waterSource: 'Sumur Bor / PAM',
+      bakKM: arg?.bakKM || '',
+      doorWindow: arg?.doorWindow || '',
+      finishingWall: arg?.finishingWall || '',
+      floor: arg?.floor || '',
+      floorNumber: arg?.floorNumber || '',
+      foundation: arg?.foundation || '',
+      kusenKM: arg?.kusenKM || '',
+      listric: arg?.electricity || '',
+      plafon: arg?.plafon || '',
+      road: arg?.road || '',
+      roadWidth: arg?.roadWidth || '',
+      roof: arg?.roof || '',
+      sanitize: arg?.sanitize || '',
+      securitySystem: arg?.securitySystem || '',
+      structure: arg?.structure || '',
+      wall: arg?.wall || '',
+      wallType: arg?.wallType || '',
+      waterSource: arg?.waterSource || '',
+    };
+    const fasilitas = {
+      bedroom: arg?.bedroom || 0,
+      carpot: arg?.carpot || 0,
+      kitchen: arg?.kitchen || 0,
+      livingRoom: arg?.livingRoom || 0,
+      toilet: arg?.toilet || 0,
     };
 
-    const fasilitas = {
-      bedroom: 2,
-      carpot: 1,
-      kitchen: 1,
-      livingRoom: 1,
-      toilet: 1,
+    const dataCreate = {
+      detailsHouse: {
+        detailUnit: detailUnit,
+        fasilitas: fasilitas,
+      },
     };
   }
 }

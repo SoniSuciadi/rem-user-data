@@ -18,6 +18,7 @@ export class CreateHomeDesignDto {
     example: 'TLR (40/70)',
   })
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({
