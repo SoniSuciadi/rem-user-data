@@ -10,6 +10,7 @@ import {
   IsNumber,
   IsOptional,
   ValidateNested,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateProjectDto {
@@ -72,4 +73,16 @@ export class CreateProjectDto {
   })
   @IsString()
   bankNameOther: string;
+
+  @ApiProperty({
+    example: true,
+  })
+  @IsBoolean()
+  isExternal: boolean;
+
+  @ApiProperty({
+    example: 90,
+  })
+  @IsNumber()
+  retentionPeriod: number;
 }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { dbPocketbase } from 'src/common/helpers/crm.helper';
 import { CreateProjectDto } from './dto/project.dto';
+import { join } from 'path';
 export class ProjectService {
   async getProjects() {
     const q = `
@@ -25,6 +26,48 @@ export class ProjectService {
   }
 
   async createProject(arg: CreateProjectDto) {
-    const { name } = arg;
+    const {
+      name,
+      isExternal,
+      accountNumberBprs,
+      bankNameBprs,
+      accountNameBprs,
+      accountNameOther,
+      accountNumberOther,
+      bankNameOther,
+      retentionPeriod,
+    } = arg;
+    // console.log(arg, 'arg');
+    const getInitials = (input: string): string =>
+      input
+        .trim()
+        .split(' ')
+        .map((word) => word[0])
+        .join('')
+        .toUpperCase();
+    const abbreviation = getInitials(name);
+    let subId = 'test';
+    if (isExternal) subId = name?.trim().split(' ').join('');
+
+    const bprs_bank_information = {
+      accountNumber: accountNumberBprs || '',
+      bankName: bankNameBprs || '',
+      accountName: accountNameBprs || '',
+    };
+    const other_bank_information = {
+      accountNumber: accountNumberOther || '',
+      bankName: bankNameOther || '',
+      accountName: accountNameOther || '',
+    };
+    const dataCreate = {
+      name,
+      abbreviation,
+      subId,
+      isExternal,
+      bprs_bank_information,
+      other_bank_information,
+      retentionPeriod: retentionPeriod || 0,
+    };
+    console.log(dataCreate);
   }
 }
