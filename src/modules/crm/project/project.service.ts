@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { dbPocketbase } from 'src/common/helpers/crm.helper';
+import { crmCreate, dbPocketbase } from 'src/common/helpers/crm.helper';
 import { CreateProjectDto } from './dto/project.dto';
 import { join } from 'path';
 export class ProjectService {
@@ -70,5 +70,12 @@ export class ProjectService {
       retentionPeriod: retentionPeriod || 0,
       adminContact: adminContact || '',
     };
+
+    const createData = await crmCreate({
+      collection: 'cms_projects',
+      data: dataCreate,
+    });
+
+    console.log(createData);
   }
 }
