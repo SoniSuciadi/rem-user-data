@@ -6,4 +6,4 @@ import { HomeDesignService } from './homeDesign.service';
   controllers: [HomeDesignController],
   providers: [HomeDesignService],
 })
-export class UnitModule {}
+export class HomeDesignModule {}
