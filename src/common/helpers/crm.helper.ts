@@ -21,6 +21,7 @@ export async function crmCreate(params: { collection: string; data: object }) {
   console.log(response);
   return response?.data;
 }
+
 export async function crmUpdate(params: {
   collection: string;
   data: object;
