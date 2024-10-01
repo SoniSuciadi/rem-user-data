@@ -175,4 +175,13 @@ export class CreateHomeDesignDto {
   })
   @IsNumber()
   toilet: number;
+
+  @ApiProperty({
+    example: [
+      'https://fm.prod.marketa.id/uploads/cms/desain-rumah/screenshot-2024-09-20-104322.png',
+    ],
+  })
+  @IsArray()
+  @IsString({ each: true, message: 'Each picture must be a string' })
+  pictures: string[];
 }
