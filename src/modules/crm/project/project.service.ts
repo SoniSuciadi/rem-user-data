@@ -20,7 +20,6 @@ export class ProjectService {
     FROM cms_projects p
     `;
     const data = await dbPocketbase({ q });
-    console.log(data);
-    return [];
+    return data || [];
   }
 }
