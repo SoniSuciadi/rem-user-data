@@ -7,7 +7,6 @@ export class ClusterService {
     const q = `
     SELECT
       c."name",
-      c.id,
       p."name" AS "project",
       COALESCE(s."stageName", '') AS "tahap"
     FROM cms_clusters c

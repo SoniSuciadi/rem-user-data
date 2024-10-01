@@ -4,7 +4,6 @@ export class ProjectService {
   async getProjects() {
     const q = `
     SELECT
-      p.id,
       p.name,
       p."abbreviation",
       COALESCE(json_extract(p."developerInformation", '$.address'), '') AS "officeAddress",
