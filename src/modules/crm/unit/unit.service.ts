@@ -34,7 +34,7 @@ export class UnitService {
     SELECT 
       u.id
     FROM cms_units u
-    WHERE  u."blocks" = '${blocks}' 
+    WHERE u."blocks" = '${blocks}' 
       AND u."homeNumber" = '${homeNumber}'
       AND u."projectId" = '${projectId}'
       AND u."clusterId" = '${clusterId}'
