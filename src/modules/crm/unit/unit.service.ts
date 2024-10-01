@@ -1,5 +1,5 @@
 import { dbPocketbase } from 'src/common/helpers/crm.helper';
-import { GetUnits } from './dto/unit.dto';
+import { CreateUnit, GetUnits } from './dto/unit.dto';
 
 export class UnitService {
   async getUnits(arg: GetUnits) {
@@ -22,5 +22,10 @@ export class UnitService {
     `;
     const data = await dbPocketbase({ q });
     return data || [];
+  }
+
+  async createUnit(arg: CreateUnit) {
+    const { projectId, clusterId, homeDesignId, block, homeNumber, status } =
+      arg;
   }
 }

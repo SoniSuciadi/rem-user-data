@@ -18,12 +18,14 @@ export class CreateClusterDto {
     example: 'Dahlia',
   })
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({
     example: 'abcdefg73hfulof',
   })
   @IsString()
+  @IsNotEmpty()
   projectId: string;
 
   @ApiProperty({

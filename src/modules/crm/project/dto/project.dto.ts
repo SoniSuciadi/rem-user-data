@@ -17,6 +17,7 @@ export class CreateProjectDto {
   @ApiProperty({
     example: 'The Leaf Residence',
   })
+  @IsNotEmpty()
   @IsString()
   name: string;
 
