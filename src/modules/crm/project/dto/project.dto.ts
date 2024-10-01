@@ -85,4 +85,10 @@ export class CreateProjectDto {
   })
   @IsNumber()
   retentionPeriod: number;
+
+  @ApiProperty({
+    example: '082174629334',
+  })
+  @IsString()
+  adminContact: string;
 }

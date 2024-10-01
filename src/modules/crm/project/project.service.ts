@@ -36,6 +36,7 @@ export class ProjectService {
       accountNumberOther,
       bankNameOther,
       retentionPeriod,
+      adminContact,
     } = arg;
     // console.log(arg, 'arg');
     const getInitials = (input: string): string =>
@@ -64,10 +65,10 @@ export class ProjectService {
       abbreviation,
       subId,
       isExternal,
-      bprs_bank_information,
-      other_bank_information,
+      bprs_bank_information: JSON.stringify(bprs_bank_information),
+      other_bank_information: JSON.stringify(other_bank_information),
       retentionPeriod: retentionPeriod || 0,
+      adminContact: adminContact || '',
     };
-    console.log(dataCreate);
   }
 }
