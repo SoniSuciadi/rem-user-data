@@ -8,6 +8,7 @@ export class ProjectService {
       p."abbreviation",
       p."isExternal"
     FROM cms_projects p
+    ORDER BY p.name
     `;
 
     // save query
