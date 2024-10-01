@@ -1,5 +1,6 @@
 import { dbPocketbase } from 'src/common/helpers/crm.helper';
 import { CreateHomeDesignDto } from './dto/homeDesign.dto';
+import { BadRequestException } from '@nestjs/common';
 
 export class HomeDesignService {
   async gethomeDesign() {
@@ -15,6 +16,17 @@ export class HomeDesignService {
 
   async createHomeDesign(arg: CreateHomeDesignDto) {
     const { name } = arg;
+
+    const findSameName = await dbPocketbase({
+      q: `
+      SELECT
+        hd.id
+      FROM cms_home_design hd
+      WHERE hd."homeDesignName" = '${name}'
+    `,
+    });
+    if (findSameName) throw new BadRequestException(`Nama ${name} sudah ada`);
+
     const detailUnit = {
       bakKM: arg?.bakKM || '',
       doorWindow: arg?.doorWindow || '',
