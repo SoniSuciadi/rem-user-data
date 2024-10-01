@@ -11,6 +11,7 @@ import {
   IsOptional,
   ValidateNested,
   IsBoolean,
+  Min,
 } from 'class-validator';
 
 export class CreateHomeDesignDto {
@@ -25,18 +26,21 @@ export class CreateHomeDesignDto {
     example: 40,
   })
   @IsNumber()
+  @Min(1, { message: 'The value must be greater than 0' })
   buildingArea: number;
 
   @ApiProperty({
     example: 10,
   })
   @IsNumber()
+  @Min(1, { message: 'The value must be greater than 0' })
   fieldWidth: number;
 
   @ApiProperty({
     example: 7,
   })
   @IsNumber()
+  @Min(1, { message: 'The value must be greater than 0' })
   fieldLength: number;
 
   @ApiProperty({
