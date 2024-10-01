@@ -19,6 +19,7 @@ export class ProjectService {
       p."isExternal"
     FROM cms_projects p
     `;
+    
     return [];
   }
 }
