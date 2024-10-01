@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { dbPocketbase } from 'src/common/helpers/crm.helper';
+import { CreateProjectDto } from './dto/project.dto';
 export class ProjectService {
   async getProjects() {
     const q = `
@@ -21,5 +22,9 @@ export class ProjectService {
     `;
     const data = await dbPocketbase({ q });
     return data || [];
+  }
+
+  async createProject(arg: CreateProjectDto) {
+    const { name } = arg;
   }
 }
