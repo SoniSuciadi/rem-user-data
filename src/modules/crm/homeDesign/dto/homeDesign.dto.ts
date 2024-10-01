@@ -184,4 +184,11 @@ export class CreateHomeDesignDto {
   @IsArray()
   @IsString({ each: true, message: 'Each picture must be a string' })
   pictures: string[];
+
+  @ApiProperty({
+    example:
+      'https://fm.prod.marketa.id/uploads/cms/desain-rumah/screenshot-2024-09-20-104322.png',
+  })
+  @IsString()
+  mainPictureUrl: string;
 }
