@@ -10,6 +10,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './common/logging/logging';
 import { QcModule } from './modules/qc/qc.module';
 import { DatabaseContractorModule } from './common/database-contractor/database-contractor.module';
+import { CrmModule } from './modules/crm/crm.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DatabaseContractorModule } from './common/database-contractor/database-
     DatabaseModule,
     DatabaseContractorModule,
     QcModule,
+    CrmModule,
   ],
   controllers: [],
   providers: [
