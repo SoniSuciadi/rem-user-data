@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ClusterService } from './cluster.service';
+import { CreateClusterDto } from './dto/cluster.dto';
 
 @Controller('crm/cluster')
 export class ClusterController {
@@ -12,5 +13,10 @@ export class ClusterController {
       message: 'Success get list crm clusters',
       data,
     };
+  }
+
+  @Post()
+  async createCluster(@Body() body: CreateClusterDto) {
+    
   }
 }
