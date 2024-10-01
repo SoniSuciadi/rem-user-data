@@ -1,7 +1,5 @@
-import axios from 'axios';
 import { crmCreate, dbPocketbase } from 'src/common/helpers/crm.helper';
 import { CreateProjectDto } from './dto/project.dto';
-import { join } from 'path';
 export class ProjectService {
   async getProjects() {
     const q = `
