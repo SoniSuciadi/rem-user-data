@@ -63,10 +63,10 @@ export class CreateUnit {
   @IsNotEmpty()
   homeNumber: string;
 
-  @ApiProperty({
-    example: 'Siap Jual',
-  })
-  @IsString()
-  @IsNotEmpty()
-  status: string;
+  //   @ApiProperty({
+  //     example: 'Siap Jual',
+  //   })
+  //   @IsString()
+  //   @IsNotEmpty()
+  //   status: string;
 }
