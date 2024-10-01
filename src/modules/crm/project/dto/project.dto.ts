@@ -75,7 +75,7 @@ export class CreateProjectDto {
   bankNameOther: string;
 
   @ApiProperty({
-    example: true,
+    example: false,
   })
   @IsBoolean()
   isExternal: boolean;

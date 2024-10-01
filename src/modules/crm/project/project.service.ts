@@ -37,6 +37,9 @@ export class ProjectService {
       bankNameOther,
       retentionPeriod,
       adminContact,
+      projectAddress,
+      officeAddress,
+      ptName,
     } = arg;
     // console.log(arg, 'arg');
     const getInitials = (input: string): string =>
@@ -49,6 +52,12 @@ export class ProjectService {
     const abbreviation = getInitials(name);
     let subId = 'test';
     if (isExternal) subId = name?.trim().split(' ').join('');
+
+    const developerInformation = {
+      address: officeAddress || '',
+      name: ptName || '',
+      projectAddress: projectAddress || '',
+    };
 
     const bprs_bank_information = {
       accountNumber: accountNumberBprs || '',
@@ -65,6 +74,7 @@ export class ProjectService {
       abbreviation,
       subId,
       isExternal,
+      developerInformation,
       bprs_bank_information,
       other_bank_information,
       retentionPeriod: retentionPeriod || 0,
