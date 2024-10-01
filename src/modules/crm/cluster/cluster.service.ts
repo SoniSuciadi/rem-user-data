@@ -28,7 +28,7 @@ export class ClusterService {
         p."name" AS "project",
       FROM cms_clusters c
       JOIN cms_projects p ON c."projectId" = p.id
-      WHERE name = '${name}' AND "projectId" = '${projectId}'
+      WHERE c.name = '${name}' AND c."projectId" = '${projectId}'
       `,
     }).catch((err) => null);
     console.log(findSameName);
