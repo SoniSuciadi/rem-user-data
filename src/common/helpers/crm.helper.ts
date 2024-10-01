@@ -7,3 +7,28 @@ export async function dbPocketbase(params: { q: string }) {
   });
   return data;
 }
+
+export async function crmCreate(params: { collection: string; data: object }) {
+  const { collection, data } = params;
+  const response = await axios.post(`${process.env.URL_HH_POCKET_BASE}/q`, {
+    collection,
+    data,
+    method: 'insert',
+  });
+  console.log(response);
+  return response?.data;
+}
+export async function crmUpdate(params: {
+  collection: string;
+  data: object;
+  id: string;
+}) {
+  const { collection, data, id } = params;
+  const response = await axios.post(`${process.env.URL_HH_POCKET_BASE}/q`, {
+    collection,
+    data,
+    method: 'update',
+    id,
+  });
+  return response?.data;
+}
