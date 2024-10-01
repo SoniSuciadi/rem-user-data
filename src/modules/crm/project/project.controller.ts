@@ -18,5 +18,10 @@ export class ProjectController {
   @Post()
   async createProject(@Body() body: CreateProjectDto) {
     const data = await this.ProjectService.createProject(body);
+
+    return {
+      message: 'Success create crm project',
+      data,
+    };
   }
 }
