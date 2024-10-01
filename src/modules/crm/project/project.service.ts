@@ -1,11 +1,11 @@
 import axios from 'axios';
+import { dbPocketbase } from 'src/common/helpers/crm.helper';
 export class ProjectService {
   async getProjects() {
     const q = `
     SELECT
       p.id,
       p.name,
-      p."subId",
       p."abbreviation",
       COALESCE(json_extract(p."developerInformation", '$.address'), '') AS "officeAddress",
       COALESCE(json_extract(p."developerInformation", '$.name'), '') AS "ptName",
@@ -19,7 +19,8 @@ export class ProjectService {
       p."isExternal"
     FROM cms_projects p
     `;
-    
+    const data = await dbPocketbase({ q });
+    console.log(data);
     return [];
   }
 }
