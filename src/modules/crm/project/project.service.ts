@@ -86,6 +86,9 @@ export class ProjectService {
       data: dataCreate,
     });
 
-    console.log(createData);
+    return {
+      id: createData?.data?.id,
+      name: name,
+    };
   }
 }
