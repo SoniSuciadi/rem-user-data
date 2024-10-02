@@ -41,7 +41,7 @@ export class PricelistController {
     const data = await this.PricelistService.createPricelist(body);
     return {
       message: 'Success create crm pricelist',
-      // data,
+      data,
     };
   }
 }

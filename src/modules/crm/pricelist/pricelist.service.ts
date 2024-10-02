@@ -1,4 +1,8 @@
-import { crmUpdate, dbPocketbase } from 'src/common/helpers/crm.helper';
+import {
+  crmCreate,
+  crmUpdate,
+  dbPocketbase,
+} from 'src/common/helpers/crm.helper';
 import {
   CreatePricelistDto,
   GetFormPricelist,
@@ -337,9 +341,14 @@ export class PricelistService {
       simulasiLamaCicilanKPR,
       listTipe,
     } = arg;
+
     const qProject = `SELECT p."id", p.name FROM cms_projects p WHERE p.id = '${projectId}'`;
     const project = await dbPocketbase({ q: qProject });
+
     if (!project) throw new BadRequestException(`Invalid projectId`);
+    if (!listTipe || !listTipe.length)
+      throw new BadRequestException(`Invalid listTipe`);
+
     const qFindSameName = `SELECT p.name FROM cms_main_pricelist p WHERE p.name = '${name?.trim()}' AND p."projectId" = '${projectId}'`;
     const qPaymentTypes = `SELECT pt.id, pt.name FROM cms_payment_types pt`;
     const qClusterType = `
@@ -364,6 +373,7 @@ export class PricelistService {
     const [sameName, getPaymentTypes, clusterType] = queryDBParallelResult.map(
       (result) => (result.status === 'fulfilled' ? result.value : []),
     );
+
     if (sameName) throw new BadRequestException(`Nama tidak tersedia`);
     if (!clusterType)
       throw new BadRequestException(
@@ -384,8 +394,26 @@ export class PricelistService {
     });
 
     const paymentTypes = getPaymentTypes?.map((ex) => ex.id);
-    let main_pricelist_id = '';
+
+    const dataCreateMain = {
+      name: name,
+      status: 'Draft',
+      projectId: projectId,
+      startDate: new Date(),
+      detail: {
+        bookingCost: 0,
+        installmentPeriod: simulasiLamaCicilanKPR,
+        kprCost: simulasiPerkiraanBungaKPR,
+        nupCost: 0,
+      },
+    };
+    const createMain = await crmCreate({
+      collection: 'cms_main_pricelist',
+      data: dataCreateMain,
+    });
+    const main_pricelist_id = createMain?.data?.id || '';
     const pricelists = [];
+
     for (let i = 0; i < listTipe.length; i++) {
       const element = listTipe[i];
       let pricelistId = '';
@@ -432,7 +460,13 @@ export class PricelistService {
           },
         },
       };
-      // console.log(dataPricelist, 'dataPricelist');
+      const createTipePricelist = await crmCreate({
+        collection: 'cms_pricelist',
+        data: dataPricelist,
+      });
+      pricelistId = createTipePricelist?.data?.id;
+      pricelists.push(createTipePricelist?.data?.id);
+
       for (let j = 0; j < clusterType.length; j++) {
         const el = clusterType[j];
         const findPrice = element?.listHarga?.find((ex) => ex.id === el.id);
@@ -457,19 +491,63 @@ export class PricelistService {
             unitType: el?.unitType || '',
           },
         };
-        console.log(dataCreatePrice, 'dataCreatePrice');
+        // console.log(dataCreatePrice, 'dataCreatePrice');
+
+        const createPrice = await crmCreate({
+          collection: 'cms_cluster_and_units_pricelist',
+          data: dataCreatePrice,
+        });
+        clusterAndUnitPricelistId.push(createPrice?.data?.id);
       }
     }
-    // console.log(clusterType, 'clusterType');
 
-    // const updateMain = await crmUpdate({
-    //   collection: 'cms_main_pricelist',
-    //   data: {
-    //   },
-    //   id: '',
-    // });
-    // console.log(updateMain);
+    // expired active pricelist
+    if (main_pricelist_id) {
+      const getActiveMain = await dbPocketbase({
+        q: `
+        SELECT
+          p.id,
+          p.pricelists
+        FROM cms_main_pricelist p
+        WHERE p."projectId" = '${projectId}' AND p.id != '${main_pricelist_id}'
+      `,
+      });
+      if (getActiveMain && !!getActiveMain?.[0]?.id) {
+        await crmUpdate({
+          collection: 'cms_main_pricelist',
+          data: {
+            status: 'Expired',
+            endDate: new Date(),
+          },
+          id: getActiveMain?.[0]?.id,
+        });
+        const oldActivePricelists = getActiveMain?.[0]?.pricelists;
+        for (let i = 0; i < oldActivePricelists.length; i++) {
+          const element = oldActivePricelists[i];
+          await crmUpdate({
+            collection: 'cms_main_pricelist',
+            data: {
+              status: 'Expired',
+              lastDateActive: new Date(),
+            },
+            id: element,
+          });
+        }
+      }
+    }
 
-    return {};
+    await crmUpdate({
+      collection: 'cms_main_pricelist',
+      data: {
+        pricelists: pricelists,
+        status: 'Aktif',
+      },
+      id: main_pricelist_id,
+    });
+
+    return {
+      id: main_pricelist_id,
+      name: name,
+    };
   }
 }
