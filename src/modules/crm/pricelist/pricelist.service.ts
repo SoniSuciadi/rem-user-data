@@ -330,7 +330,12 @@ export class PricelistService {
   }
 
   async createPricelist(arg: CreatePricelistDto) {
-    const { projectId } = arg;
+    const {
+      projectId,
+      name,
+      simulasiPerkiraanBungaKPR,
+      simulasiLamaCicilanKPR,
+    } = arg;
     const project = await dbPocketbase({
       q: `
     SELECT p."*" FROM cms_projects p WHERE p.id = '${projectId}'

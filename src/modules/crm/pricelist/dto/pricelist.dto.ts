@@ -12,6 +12,7 @@ import {
   IsOptional,
   ValidateNested,
   IsBoolean,
+  Max,
 } from 'class-validator';
 import { HasAtLeastOneSellTrue, IsSellValid } from './pricelist.validator';
 
@@ -143,6 +144,7 @@ export class CreatePricelistDto {
     example: 10,
   })
   @IsNumber()
+  @Max(100)
   simulasiPerkiraanBungaKPR: number;
 
   @ApiProperty({
