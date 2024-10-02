@@ -128,6 +128,7 @@ export class CreatePricelistDto {
   @IsNumber()
   simulasiLamaCicilanKPR: number;
 
+  @ApiProperty({ type: [ListTipeDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ListTipeDto)
