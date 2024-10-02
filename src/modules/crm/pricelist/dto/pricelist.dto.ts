@@ -104,6 +104,7 @@ class ListTipeDto {
       'https://fm.prod.marketa.id/uploads/cms/pricelist/pricelist-gm-sukabumi-juni-2023.jpg',
   })
   @IsString()
+  @IsNotEmpty()
   document: string;
 
   @ApiProperty({ example: '', required: false })
