@@ -149,6 +149,8 @@ export class PricelistService {
     return {
       name: tempName,
       projectId,
+      simulasiPerkiraanBungaKPR: 10,
+      simulasiLamaCicilanKPR: 5,
       listTipe: [
         {
           name: 'Standart',
