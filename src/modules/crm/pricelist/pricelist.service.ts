@@ -345,7 +345,10 @@ export class PricelistService {
     const qClusterType = `
     SELECT
       u."clusterId" || '-' || u."homeDesignId" AS id,
-      c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name
+      u."clusterId",
+      u."homeDesignId",
+      hd."typeUnit" AS "unitType",
+      c.name AS name
     FROM cms_units u
     JOIN cms_clusters c ON u."clusterId" = c.id
     JOIN cms_home_design hd ON u."homeDesignId" = hd.id
@@ -363,11 +366,26 @@ export class PricelistService {
     );
     if (sameName) throw new BadRequestException(`Nama tidak tersedia`);
 
+    // validasi clusterId dan homeDesignId
+    listTipe.forEach((ex) => {
+      ex.listHarga.forEach((el) => {
+        const isExist = clusterType?.find((e) => e.id === el.id);
+        const [clusterId, homeDesignId] = el.id.split('-');
+        if (!isExist) {
+          throw new BadRequestException(
+            `clusterId '${clusterId}' dan '${homeDesignId}' pada Tipe '${ex.name}' tidak tersedia pada Proyek ${project.name || ''}`,
+          );
+        }
+      });
+    });
+
     const paymentTypes = getPaymentTypes?.map((ex) => ex.id);
     let main_pricelist_id = '';
-
+    const pricelists = [];
     for (let i = 0; i < listTipe.length; i++) {
       const element = listTipe[i];
+      let pricelistId = '';
+      const clusterAndUnitPricelistId = [];
       const dataPricelist = {
         main_pricelist_id: main_pricelist_id,
         pricelistName: name?.trim() + ' ' + element?.name?.trim(),
@@ -410,8 +428,9 @@ export class PricelistService {
           },
         },
       };
-      console.log(dataPricelist, 'dataPricelist');
+      // console.log(dataPricelist, 'dataPricelist');
     }
+    console.log(clusterType, 'clusterType');
 
     // const updateMain = await crmUpdate({
     //   collection: 'cms_main_pricelist',
