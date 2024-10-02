@@ -35,7 +35,7 @@ export class GetFormPricelist {
 
 export class GetFormPricelistById {
   @ApiProperty({
-    example: 'fmq3k2mkhmee86d',
+    example: 'oavia61e2scc1ig',
   })
   @IsString()
   @IsNotEmpty()
