@@ -21,3 +21,19 @@ export class GetPricelistDto {
   @IsNotEmpty()
   projectId: string;
 }
+
+export class CreatePricelistDto {
+  @ApiProperty({
+    example: 'fmq3k2mkhmee86d',
+  })
+  @IsString()
+  @IsNotEmpty()
+  projectId: string;
+
+  @ApiProperty({
+    example: 'Pricelist Oktober',
+  })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}

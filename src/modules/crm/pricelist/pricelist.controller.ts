@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PricelistService } from './pricelist.service';
-import { GetPricelistDto } from './dto/pricelist.dto';
+import { CreatePricelistDto, GetPricelistDto } from './dto/pricelist.dto';
 
 @Controller('crm/pricelist')
 export class PricelistController {
@@ -11,6 +11,15 @@ export class PricelistController {
     const data = await this.PricelistService.getPricelist(params);
     return {
       message: 'Success get list crm pricelist',
+      data,
+    };
+  }
+
+  @Post()
+  async createPricelist(@Body() body: CreatePricelistDto) {
+    const data = await this.PricelistService.createPricelist(body);
+    return {
+      message: 'Success create crm pricelist',
       data,
     };
   }

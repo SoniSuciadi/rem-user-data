@@ -1,5 +1,6 @@
 import { dbPocketbase } from 'src/common/helpers/crm.helper';
-import { GetPricelistDto } from './dto/pricelist.dto';
+import { CreatePricelistDto, GetPricelistDto } from './dto/pricelist.dto';
+import { BadRequestException } from '@nestjs/common';
 
 export class PricelistService {
   async getPricelist(arg: GetPricelistDto) {
@@ -68,5 +69,15 @@ export class PricelistService {
     });
 
     return main || [];
+  }
+
+  async createPricelist(arg: CreatePricelistDto) {
+    const { projectId } = arg;
+    const project = await dbPocketbase({
+      q: `
+    SELECT p."*" FROM cms_projects p WHERE p.id = '${projectId}'
+    `,
+    });
+    if (project) throw new BadRequestException(``);
   }
 }
