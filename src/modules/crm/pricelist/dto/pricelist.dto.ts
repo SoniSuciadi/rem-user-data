@@ -79,10 +79,13 @@ class ListHargaDto {
 class ListTipeDto {
   @ApiProperty({ example: 'Standart' })
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({ example: 0 })
   @IsNumber()
+  @Min(1)
+  @IsNotEmpty()
   amount: number;
 
   @ApiProperty({
