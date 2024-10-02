@@ -258,13 +258,13 @@ export class PricelistService {
     });
 
     const result = {
-      name: main?.[0]?.name || '',
+      name: main?.[0]?.name ? main?.[0]?.name + ' Duplikat' : '',
       projectId: main?.[0]?.projectId,
       simulasiPerkiraanBungaKPR: main?.[0]?.simulasiPerkiraanBungaKPR,
       simulasiLamaCicilanKPR: main?.[0]?.simulasiLamaCicilanKPR,
       listTipe: pricelist?.map((ex) => {
         return {
-          name: ex?.name ? ex?.name + ' Duplikat' : '',
+          name: ex?.name || '',
           amount: ex?.amount || 0,
           typeNUP: ex?.typeNUP || 'NUP',
           document: ex?.document || '',
