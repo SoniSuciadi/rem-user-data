@@ -491,7 +491,6 @@ export class PricelistService {
             unitType: el?.unitType || '',
           },
         };
-        // console.log(dataCreatePrice, 'dataCreatePrice');
 
         const createPrice = await crmCreate({
           collection: 'cms_cluster_and_units_pricelist',
@@ -499,6 +498,14 @@ export class PricelistService {
         });
         clusterAndUnitPricelistId.push(createPrice?.data?.id);
       }
+
+      await crmUpdate({
+        collection: 'cms_pricelist',
+        data: {
+          clusterAndUnitPricelistId: clusterAndUnitPricelistId,
+        },
+        id: pricelistId,
+      });
     }
 
     // expired active pricelist
