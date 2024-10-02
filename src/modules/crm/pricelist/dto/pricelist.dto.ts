@@ -90,10 +90,8 @@ class ListTipeDto {
   @ApiProperty({
     example:
       'https://fm.prod.marketa.id/uploads/cms/pricelist/pricelist-gm-sukabumi-juni-2023.jpg',
-    required: false,
   })
   @IsString()
-  @IsOptional()
   document: string;
 
   @ApiProperty({ example: '', required: false })
