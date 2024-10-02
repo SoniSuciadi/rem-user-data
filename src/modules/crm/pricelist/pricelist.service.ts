@@ -185,7 +185,107 @@ export class PricelistService {
 
   async getFormPricelistById(arg: GetFormPricelistById) {
     const { pricelistId } = arg;
-    return {};
+    const qMain = `
+    SELECT
+      mp.id,
+      mp."name" AS name,
+      mp."projectId",
+      COALESCE(json_extract(mp."detail", '$.installmentPeriod'), 0) AS "simulasiLamaCicilanKPR",
+      COALESCE(json_extract(mp."detail", '$.kprCost'), 0) AS "simulasiPerkiraanBungaKPR",
+      mp.status
+    FROM cms_main_pricelist mp
+    WHERE mp."id" = '${pricelistId}'
+    ORDER BY 
+    CASE 
+        WHEN mp.status = 'Aktif' THEN 1
+        WHEN mp.status = 'Draft' THEN 2
+        WHEN mp.status = 'Expired' THEN 3
+        ELSE 4
+    END,
+    mp."name" ASC
+    `;
+
+    const qPricelist = `
+    SELECT
+      p.id,
+      COALESCE(json_extract(p."detail", '$.name'), '') AS name,
+      COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS "document",
+      COALESCE(json_extract(p."detail", '$.howToOrder'), '') AS "caraPemesanan",
+      COALESCE(json_extract(p."detail", '$.notes'), '') AS "catatan",
+      COALESCE(json_extract(p."detail", '$.requirementDocumentKpr'), '') AS "dokumenPersyaratanKPR",
+      p.nup AS "amount",
+      p."typeNUP" AS "typeNUP"
+    FROM cms_pricelist p
+    WHERE p."main_pricelist_id" = '${pricelistId}'
+    `;
+
+    const qClusterType = `
+    SELECT
+      p.sell,
+      c.name || ' (' || hd."typeUnit" || ')' AS name,
+      COALESCE(json_extract(p."detailClusterAndUnit", '$.listingPrice'), 0) AS "price",
+      COALESCE(json_extract(p."detailClusterAndUnit", '$.kprCosts'), 0) AS "kprCosts",
+      COALESCE(json_extract(p."detailClusterAndUnit", '$.notaryFee'), 0) AS "notaryFee",
+      COALESCE(json_extract(p."detailClusterAndUnit", '$.dpPrice'), 0) AS "dpPrice",
+      COALESCE(json_extract(p."detailClusterAndUnit", '$.description'), '') AS "keterangan",
+      p."clusterId",
+      p."homeDesignId",
+      p."pricelistId"
+    FROM cms_cluster_and_units_pricelist p
+    JOIN cms_pricelist pricelist ON p."pricelistId" = pricelist.id
+    JOIN cms_clusters c ON p."clusterId" = c.id
+    JOIN cms_home_design hd ON p."homeDesignId" = hd.id
+    WHERE pricelist."main_pricelist_id" = '${pricelistId}'
+    `;
+
+    const queryDBParallelResult = await Promise.allSettled([
+      dbPocketbase({ q: qMain }),
+      dbPocketbase({ q: qPricelist }),
+      dbPocketbase({ q: qClusterType }),
+    ]);
+
+    const [main, pricelist, prices] = queryDBParallelResult.map((result) =>
+      result.status === 'fulfilled' ? result.value : [],
+    );
+    pricelist.forEach((ex) => {
+      ex.listHarga = prices?.filter((el) => el.pricelistId === ex.id);
+      if (ex.document && !ex.document?.includes('http')) {
+        ex.document = `https://fm.prod.marketa.id/uploads/${ex.document}`;
+      }
+      ex.caraPemesanan = ex?.caraPemesanan?.valueText || '';
+      ex.catatan = ex?.catatan?.valueText || '';
+      ex.dokumenPersyaratanKPR = ex?.dokumenPersyaratanKPR?.valueText || '';
+    });
+
+    const result = {
+      name: main?.[0]?.name || '',
+      projectId: main?.[0]?.projectId,
+      simulasiPerkiraanBungaKPR: main?.[0]?.simulasiPerkiraanBungaKPR,
+      simulasiLamaCicilanKPR: main?.[0]?.simulasiLamaCicilanKPR,
+      listTipe: pricelist?.map((ex) => {
+        return {
+          name: ex?.name || '',
+          amount: ex?.amount || 0,
+          typeNUP: ex?.typeNUP || 'NUP',
+          document: ex?.document || '',
+          caraPemesanan: ex?.caraPemesanan || '',
+          catatan: ex?.catatan || '',
+          dokumenPersyaratanKPR: ex?.dokumenPersyaratanKPR || '',
+          listHarga: ex?.listHarga?.map((el) => {
+            return {
+              name: el?.name || '',
+              id: `${el?.clusterId}-${el?.homeDesignId}`,
+              sell: el?.sell || false,
+              price: el?.price || 0,
+              kprCosts: el?.kprCosts || 0,
+              notaryFee: el?.notaryFee || 0,
+              keterangan: el?.keterangan || '',
+            };
+          }),
+        };
+      }),
+    };
+    return result;
   }
 
   async createPricelist(arg: CreatePricelistDto) {
