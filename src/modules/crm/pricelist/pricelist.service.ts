@@ -1,4 +1,4 @@
-import { dbPocketbase } from 'src/common/helpers/crm.helper';
+import { crmUpdate, dbPocketbase } from 'src/common/helpers/crm.helper';
 import {
   CreatePricelistDto,
   GetFormPricelist,
@@ -341,16 +341,41 @@ export class PricelistService {
     const project = await dbPocketbase({ q: qProject });
     if (!project) throw new BadRequestException(`Invalid projectId`);
     const qFindSameName = `SELECT p.name FROM cms_main_pricelist p WHERE p.name = '${name}' AND p."projectId" = '${projectId}'`;
+    const qPaymentTypes = `SELECT pt.id, pt.name FROM cms_payment_types pt`;
+    const qClusterType = `
+    SELECT
+      u."clusterId",
+      u."homeDesignId",
+      c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name
+    FROM cms_units u
+    JOIN cms_clusters c ON u."clusterId" = c.id
+    JOIN cms_home_design hd ON u."homeDesignId" = hd.id
+    WHERE c."projectId" = '${projectId}'
+    GROUP BY u."clusterId", u."homeDesignId", c.name, hd."typeUnit"
+    ORDER BY c.name, hd."homeDesignName", hd."typeUnit"`;
 
     const queryDBParallelResult = await Promise.allSettled([
       dbPocketbase({ q: qFindSameName }),
+      dbPocketbase({ q: qPaymentTypes }),
+      dbPocketbase({ q: qClusterType }),
     ]);
-    const [sameName] = queryDBParallelResult.map((result) =>
-      result.status === 'fulfilled' ? result.value : [],
+    const [sameName, getPaymentTypes, clusterType] = queryDBParallelResult.map(
+      (result) => (result.status === 'fulfilled' ? result.value : []),
     );
-
     if (sameName) throw new BadRequestException(`Nama tidak tersedia`);
 
-    
+    const paymentTypes = getPaymentTypes?.map((ex) => ex.id);
+
+    console.log(clusterType, 'paymentTypes');
+
+    // const updateMain = await crmUpdate({
+    //   collection: 'cms_main_pricelist',
+    //   data: {
+    //   },
+    //   id: '',
+    // });
+    // console.log(updateMain);
+
+    return {};
   }
 }
