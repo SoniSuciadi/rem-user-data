@@ -13,6 +13,7 @@ import {
   ValidateNested,
   IsBoolean,
 } from 'class-validator';
+import { HasAtLeastOneSellTrue } from './pricelist.validator';
 
 export class GetPricelistDto {
   @ApiProperty({
@@ -100,6 +101,9 @@ class ListTipeDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ListHargaDto)
+  @HasAtLeastOneSellTrue({
+    message: 'At least one object in listHarga must have sell as true.',
+  })
   listHarga: ListHargaDto[];
 }
 
