@@ -149,9 +149,13 @@ export class CreatePricelistDto {
 
   @ApiProperty({
     example: 5,
+    enum: [5, 10, 15, 20, 25],
+    description: 'Only allowed values are 5, 10, 15, 20, 25',
   })
   @IsNumber()
-  @Max(25)
+  @IsIn([5, 10, 15, 20, 25], {
+    message: 'Only allowed values are 5, 10, 15, 20, 25',
+  })
   simulasiLamaCicilanKPR: number;
 
   @ApiProperty({ type: [ListTipeDto] })
