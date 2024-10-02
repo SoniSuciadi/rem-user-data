@@ -23,8 +23,7 @@ export class PricelistController {
   async getFormPricelist(@Param() params: GetFormPricelist) {
     const data = await this.PricelistService.getFormPricelist(params);
     return {
-      message: 'Success get template form create crm pricelist',
-      data,
+      ...data,
     };
   }
 
