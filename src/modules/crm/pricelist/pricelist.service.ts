@@ -470,6 +470,14 @@ export class PricelistService {
       for (let j = 0; j < clusterType.length; j++) {
         const el = clusterType[j];
         const findPrice = element?.listHarga?.find((ex) => ex.id === el.id);
+        const listingPrice = findPrice?.price || 0;
+        const dpPrice = +listingPrice * 0.05;
+        const plafondKpr = +listingPrice - dpPrice;
+        const r = +simulasiPerkiraanBungaKPR / 12 / 100;
+        const n = +simulasiLamaCicilanKPR * 12;
+        const kprInstallment = Math.round(
+          (plafondKpr * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1),
+        );
 
         const dataCreatePrice = {
           clusterId: el?.clusterId,
@@ -480,13 +488,13 @@ export class PricelistService {
           detailClusterAndUnit: {
             clusterId: el?.clusterId || '',
             description: findPrice?.keterangan || '',
-            dpPrice: 0,
+            dpPrice: dpPrice,
             kprCosts: findPrice?.kprCosts || 0,
-            kprInstallment: 0,
-            listingPrice: findPrice?.price || 0,
+            kprInstallment: kprInstallment || 0,
+            listingPrice: listingPrice,
             name: el?.name,
             notaryFee: findPrice?.notaryFee || 0,
-            plafondKpr: 0,
+            plafondKpr: plafondKpr,
             unitId: el?.homeDesignId || '',
             unitType: el?.unitType || '',
           },
