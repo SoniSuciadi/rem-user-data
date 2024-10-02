@@ -33,6 +33,15 @@ export class GetFormPricelist {
   projectId: string;
 }
 
+export class GetFormPricelistById {
+  @ApiProperty({
+    example: 'fmq3k2mkhmee86d',
+  })
+  @IsString()
+  @IsNotEmpty()
+  pricelistId: string;
+}
+
 class ListHargaDto {
   @ApiProperty({ example: 'Tahap 1 (Ruko)' })
   @IsString()

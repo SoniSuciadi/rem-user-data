@@ -2,6 +2,7 @@ import { dbPocketbase } from 'src/common/helpers/crm.helper';
 import {
   CreatePricelistDto,
   GetFormPricelist,
+  GetFormPricelistById,
   GetPricelistDto,
 } from './dto/pricelist.dto';
 import { BadRequestException } from '@nestjs/common';
@@ -180,6 +181,11 @@ export class PricelistService {
         },
       ],
     };
+  }
+
+  async getFormPricelistById(arg: GetFormPricelistById) {
+    const { pricelistId } = arg;
+    return {};
   }
 
   async createPricelist(arg: CreatePricelistDto) {
