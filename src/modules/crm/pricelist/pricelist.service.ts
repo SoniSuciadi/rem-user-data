@@ -337,8 +337,20 @@ export class PricelistService {
       simulasiLamaCicilanKPR,
       listTipe,
     } = arg;
-    const qProject = `SELECT p."id" FROM cms_projects p WHERE p.id = '${projectId}'`;
+    const qProject = `SELECT p."id", p.name FROM cms_projects p WHERE p.id = '${projectId}'`;
     const project = await dbPocketbase({ q: qProject });
     if (!project) throw new BadRequestException(`Invalid projectId`);
+    const qFindSameName = `SELECT p.name FROM cms_main_pricelist p WHERE p.name = '${name}' AND p."projectId" = '${projectId}'`;
+
+    const queryDBParallelResult = await Promise.allSettled([
+      dbPocketbase({ q: qFindSameName }),
+    ]);
+    const [sameName] = queryDBParallelResult.map((result) =>
+      result.status === 'fulfilled' ? result.value : [],
+    );
+
+    if (sameName) throw new BadRequestException(`Nama tidak tersedia`);
+
+    
   }
 }
