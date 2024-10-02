@@ -1,4 +1,4 @@
-import { dbPocketbase } from 'src/common/helpers/crm.helper';
+import { crmCreate, dbPocketbase } from 'src/common/helpers/crm.helper';
 import { CreateHomeDesignDto } from './dto/homeDesign.dto';
 import { BadRequestException } from '@nestjs/common';
 
@@ -15,7 +15,7 @@ export class HomeDesignService {
   }
 
   async createHomeDesign(arg: CreateHomeDesignDto) {
-    const { name } = arg;
+    const { name, buildingArea, fieldWidth, fieldLength } = arg;
 
     const findSameName = await dbPocketbase({
       q: `
@@ -56,10 +56,27 @@ export class HomeDesignService {
     };
 
     const dataCreate = {
+      homeDesignName: name,
+      buildingArea: buildingArea,
+      fieldWidth: fieldWidth,
+      fieldLength: fieldLength,
+      typeUnit: `${buildingArea}/${fieldWidth * fieldLength}`,
       detailsHouse: {
         detailUnit: detailUnit,
         fasilitas: fasilitas,
       },
+      pictures: arg?.pictures || [],
+      mainPictureUrl: arg?.mainPictureUrl || '',
+    };
+
+    const createData = await crmCreate({
+      collection: 'cms_home_design',
+      data: dataCreate,
+    });
+
+    return {
+      id: createData?.data?.id,
+      name: name,
     };
   }
 }
