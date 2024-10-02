@@ -43,15 +43,15 @@ export class GetFormPricelistById {
 }
 
 class ListHargaDto {
-  @ApiProperty({ example: 'Tahap 1 (Ruko)' })
-  @IsString()
-  name: string;
+  // @ApiProperty({ example: 'Tahap 1 - Alamanda (30/40))' })
+  // @IsString()
+  // name: string;
 
-  @ApiProperty({ example: '000000000000008-000000000000020' })
+  @ApiProperty({ example: '{clusterId}-${homeDesignId}' })
   @IsString()
   id: string;
 
-  @ApiProperty({ example: false })
+  @ApiProperty({ example: true })
   @IsBoolean()
   sell: boolean;
 
@@ -87,7 +87,11 @@ class ListTipeDto {
   @IsString()
   typeNUP: string;
 
-  @ApiProperty({ example: '', required: false })
+  @ApiProperty({
+    example:
+      'https://fm.prod.marketa.id/uploads/cms/pricelist/pricelist-gm-sukabumi-juni-2023.jpg',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   document: string;
@@ -125,7 +129,7 @@ export class CreatePricelistDto {
   name: string;
 
   @ApiProperty({
-    example: 'hadgj1bs81gsjgs',
+    example: '${projectId}',
   })
   @IsString()
   projectId: string;
