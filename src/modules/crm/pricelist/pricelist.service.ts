@@ -540,7 +540,7 @@ export class PricelistService {
         for (let i = 0; i < oldActivePricelists.length; i++) {
           const element = oldActivePricelists[i];
           await crmUpdate({
-            collection: 'cms_main_pricelist',
+            collection: 'cms_pricelist',
             data: {
               status: 'Expired',
               lastDateActive: new Date(),
