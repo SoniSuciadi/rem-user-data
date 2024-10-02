@@ -7,6 +7,7 @@ export class UnitService {
     const { project, cluster } = arg;
     const q = `
     SELECT
+      u.id,
       u."blocks" AS "blok",
       u."homeNumber" AS "homeNumber",
       u."unitStatus" AS "status",
