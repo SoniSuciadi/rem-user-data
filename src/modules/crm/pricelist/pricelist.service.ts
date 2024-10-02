@@ -35,7 +35,8 @@ export class PricelistService {
       p.id,
       COALESCE(json_extract(p."detail", '$.name'), '') AS name,
       COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS "document",
-      p.nup AS "nup",
+      p.nup AS "amount",
+      p."typeNUP" AS "typeNUP",
       p.main_pricelist_id
     FROM cms_pricelist p
     WHERE p."projectId" = '${projectId}'
@@ -152,6 +153,8 @@ export class PricelistService {
         {
           name: 'Standart',
           nup: 0,
+          document: '',
+          listHarga,
         },
       ],
     };
