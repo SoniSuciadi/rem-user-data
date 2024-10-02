@@ -195,15 +195,10 @@ export class PricelistService {
       mp.status
     FROM cms_main_pricelist mp
     WHERE mp."id" = '${pricelistId}'
-    ORDER BY 
-    CASE 
-        WHEN mp.status = 'Aktif' THEN 1
-        WHEN mp.status = 'Draft' THEN 2
-        WHEN mp.status = 'Expired' THEN 3
-        ELSE 4
-    END,
-    mp."name" ASC
     `;
+    const main = await dbPocketbase({ q: qMain });
+    if (!main) throw new BadRequestException(`Invalid pricelistId`);
+    const projectId = main?.[0]?.projectId;
 
     const qPricelist = `
     SELECT
@@ -228,8 +223,7 @@ export class PricelistService {
       COALESCE(json_extract(p."detailClusterAndUnit", '$.notaryFee'), 0) AS "notaryFee",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.dpPrice'), 0) AS "dpPrice",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.description'), '') AS "keterangan",
-      p."clusterId",
-      p."homeDesignId",
+      p."clusterId" || '-' || p."homeDesignId" AS id,
       p."pricelistId"
     FROM cms_cluster_and_units_pricelist p
     JOIN cms_pricelist pricelist ON p."pricelistId" = pricelist.id
@@ -238,17 +232,51 @@ export class PricelistService {
     WHERE pricelist."main_pricelist_id" = '${pricelistId}'
     `;
 
+    const qClusterTypeProject = `
+    SELECT
+      u."clusterId",
+      u."homeDesignId",
+      c.name || ' (' || hd."typeUnit" || ')' AS name
+    FROM cms_units u
+    JOIN cms_clusters c ON u."clusterId" = c.id
+    JOIN cms_home_design hd ON u."homeDesignId" = hd.id
+    WHERE c."projectId" = '${projectId}'
+    GROUP BY u."clusterId", u."homeDesignId", c.name, hd."typeUnit";
+  `;
+
     const queryDBParallelResult = await Promise.allSettled([
-      dbPocketbase({ q: qMain }),
       dbPocketbase({ q: qPricelist }),
       dbPocketbase({ q: qClusterType }),
+      dbPocketbase({ q: qClusterTypeProject }),
     ]);
 
-    const [main, pricelist, prices] = queryDBParallelResult.map((result) =>
-      result.status === 'fulfilled' ? result.value : [],
+    const [pricelist, prices, getClusterType] = queryDBParallelResult.map(
+      (result) => (result.status === 'fulfilled' ? result.value : []),
     );
+    const tempPrices = getClusterType?.map((ex) => {
+      return {
+        name: ex?.name,
+        id: `${ex?.clusterId}-${ex?.homeDesignId}`,
+        sell: false,
+        price: 0,
+        kprCosts: 0,
+        notaryFee: 0,
+        keterangan: '',
+      };
+    });
+    console.log(prices);
+
     pricelist.forEach((ex) => {
-      ex.listHarga = prices?.filter((el) => el.pricelistId === ex.id);
+      const tempList = prices?.filter((el) => el.pricelistId === ex.id);
+      tempPrices.forEach((el) => {
+        const findSame = tempList.find((e) => el.id === e.id);
+        if (!findSame) {
+          console.log(el.id, 'data tidak ada');
+          tempList.push(el);
+        }
+      });
+      ex.listHarga = tempList;
+
       if (ex.document && !ex.document?.includes('http')) {
         ex.document = `https://fm.prod.marketa.id/uploads/${ex.document}`;
       }
@@ -273,8 +301,8 @@ export class PricelistService {
           dokumenPersyaratanKPR: ex?.dokumenPersyaratanKPR || '',
           listHarga: ex?.listHarga?.map((el) => {
             return {
+              id: el?.id,
               name: el?.name || '',
-              id: `${el?.clusterId}-${el?.homeDesignId}`,
               sell: el?.sell || false,
               price: el?.price || 0,
               kprCosts: el?.kprCosts || 0,
