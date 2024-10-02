@@ -151,6 +151,7 @@ export class CreatePricelistDto {
     example: 5,
   })
   @IsNumber()
+  @Max(25)
   simulasiLamaCicilanKPR: number;
 
   @ApiProperty({ type: [ListTipeDto] })
