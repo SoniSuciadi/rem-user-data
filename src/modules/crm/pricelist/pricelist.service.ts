@@ -337,11 +337,8 @@ export class PricelistService {
       simulasiLamaCicilanKPR,
       listTipe,
     } = arg;
-    const project = await dbPocketbase({
-      q: `
-    SELECT p."*" FROM cms_projects p WHERE p.id = '${projectId}'
-    `,
-    });
-    if (!project) throw new BadRequestException(``);
+    const qProject = `SELECT p."id" FROM cms_projects p WHERE p.id = '${projectId}'`;
+    const project = await dbPocketbase({ q: qProject });
+    if (!project) throw new BadRequestException(`Invalid projectId`);
   }
 }
