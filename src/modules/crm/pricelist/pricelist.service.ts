@@ -264,7 +264,7 @@ export class PricelistService {
       simulasiLamaCicilanKPR: main?.[0]?.simulasiLamaCicilanKPR,
       listTipe: pricelist?.map((ex) => {
         return {
-          name: ex?.name || '',
+          name: ex?.name ? ex?.name + ' Duplikat' : '',
           amount: ex?.amount || 0,
           typeNUP: ex?.typeNUP || 'NUP',
           document: ex?.document || '',
