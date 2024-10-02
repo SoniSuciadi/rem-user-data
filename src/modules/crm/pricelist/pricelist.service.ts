@@ -9,6 +9,14 @@ import { BadRequestException } from '@nestjs/common';
 export class PricelistService {
   async getPricelist(arg: GetPricelistDto) {
     const { projectId } = arg;
+    const project = await dbPocketbase({
+      q: `SELECT 
+            p."id" 
+          FROM cms_projects p 
+          WHERE p.id = '${projectId}'`,
+    });
+    if (!project) throw new BadRequestException(`Proyek tidak ada`);
+
     const qMain = `
     SELECT
       mp.id,
