@@ -34,7 +34,7 @@ export class PricelistService {
     SELECT
       p.id,
       COALESCE(json_extract(p."detail", '$.name'), '') AS name,
-      COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS documentPriceList,
+      COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS "documentPriceList",
       p.nup AS "nup",
       p.main_pricelist_id
     FROM cms_pricelist p
