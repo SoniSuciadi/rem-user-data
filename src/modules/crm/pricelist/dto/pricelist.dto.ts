@@ -22,6 +22,15 @@ export class GetPricelistDto {
   projectId: string;
 }
 
+export class GetFormPricelist {
+  @ApiProperty({
+    example: 'fmq3k2mkhmee86d',
+  })
+  @IsString()
+  @IsNotEmpty()
+  projectId: string;
+}
+
 export class CreatePricelistDto {
   @ApiProperty({
     example: 'fmq3k2mkhmee86d',

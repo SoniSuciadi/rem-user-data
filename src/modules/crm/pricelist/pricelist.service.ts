@@ -1,5 +1,9 @@
 import { dbPocketbase } from 'src/common/helpers/crm.helper';
-import { CreatePricelistDto, GetPricelistDto } from './dto/pricelist.dto';
+import {
+  CreatePricelistDto,
+  GetFormPricelist,
+  GetPricelistDto,
+} from './dto/pricelist.dto';
 import { BadRequestException } from '@nestjs/common';
 
 export class PricelistService {
@@ -69,6 +73,32 @@ export class PricelistService {
     });
 
     return main || [];
+  }
+
+  async getFormPricelist(arg: GetFormPricelist) {
+    const { projectId } = arg;
+    const months = [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ];
+    const currentDate = new Date();
+    const currentMonthIndex = currentDate.getMonth(); // Mengambil index bulan (0-11)
+    const tempName = 'Pricelist ' + months[currentMonthIndex];
+
+    return {
+      name: tempName,
+      projectId,
+    };
   }
 
   async createPricelist(arg: CreatePricelistDto) {

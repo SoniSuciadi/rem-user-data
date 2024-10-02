@@ -1,6 +1,10 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PricelistService } from './pricelist.service';
-import { CreatePricelistDto, GetPricelistDto } from './dto/pricelist.dto';
+import {
+  CreatePricelistDto,
+  GetFormPricelist,
+  GetPricelistDto,
+} from './dto/pricelist.dto';
 
 @Controller('crm/pricelist')
 export class PricelistController {
@@ -11,6 +15,15 @@ export class PricelistController {
     const data = await this.PricelistService.getPricelist(params);
     return {
       message: 'Success get list crm pricelist',
+      data,
+    };
+  }
+
+  @Get('form-create/:projectId')
+  async getFormPricelist(@Param() params: GetFormPricelist) {
+    const data = await this.PricelistService.getFormPricelist(params);
+    return {
+      message: 'Success get template form create crm pricelist',
       data,
     };
   }
