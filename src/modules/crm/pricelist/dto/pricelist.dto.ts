@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsEmail,
@@ -31,18 +32,77 @@ export class GetFormPricelist {
   projectId: string;
 }
 
-export class CreatePricelistDto {
-  @ApiProperty({
-    example: 'fmq3k2mkhmee86d',
-  })
+class ListHargaDto {
   @IsString()
-  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  id: string;
+
+  @IsBoolean()
+  sell: boolean;
+
+  @IsNumber()
+  price: number;
+
+  @IsNumber()
+  kprCosts: number;
+
+  @IsNumber()
+  notaryFee: number;
+
+  @IsString()
+  @IsOptional()
+  keterangan: string;
+}
+
+class ListTipeDto {
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  amount: number;
+
+  @IsString()
+  typeNUP: string;
+
+  @IsString()
+  @IsOptional()
+  document: string;
+
+  @IsString()
+  @IsOptional()
+  caraPemesanan: string;
+
+  @IsString()
+  @IsOptional()
+  catatan: string;
+
+  @IsString()
+  @IsOptional()
+  dokumenPersyaratanKPR: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ListHargaDto)
+  listHarga: ListHargaDto[];
+}
+
+export class CreatePricelistDto {
+  @IsString()
+  name: string;
+
+  @IsString()
   projectId: string;
 
-  @ApiProperty({
-    example: 'Pricelist Oktober',
-  })
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsNumber()
+  simulasiPerkiraanBungaKPR: number;
+
+  @IsNumber()
+  simulasiLamaCicilanKPR: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ListTipeDto)
+  listTipe: ListTipeDto[];
 }
