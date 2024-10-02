@@ -143,7 +143,7 @@ export class PricelistService {
       SELECT
         u."clusterId",
         u."homeDesignId",
-        c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name,
+        c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name
       FROM cms_units u
       JOIN cms_clusters c ON u."clusterId" = c.id
       JOIN cms_home_design hd ON u."homeDesignId" = hd.id
