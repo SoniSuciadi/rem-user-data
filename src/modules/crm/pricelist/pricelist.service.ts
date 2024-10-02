@@ -264,7 +264,6 @@ export class PricelistService {
         keterangan: '',
       };
     });
-    console.log(prices);
 
     pricelist.forEach((ex) => {
       const tempList = prices?.filter((el) => el.pricelistId === ex.id);
