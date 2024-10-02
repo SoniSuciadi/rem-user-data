@@ -43,6 +43,9 @@ export class PricelistService {
       p.id,
       COALESCE(json_extract(p."detail", '$.name'), '') AS name,
       COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS "document",
+      COALESCE(json_extract(p."detail", '$.howToOrder'), '') AS "caraPemesanan",
+      COALESCE(json_extract(p."detail", '$.notes'), '') AS "catatan",
+      COALESCE(json_extract(p."detail", '$.requirementDocumentKpr'), '') AS "dokumenPersyaratanKPR",
       p.nup AS "amount",
       p."typeNUP" AS "typeNUP",
       p.main_pricelist_id
@@ -81,6 +84,11 @@ export class PricelistService {
       if (ex.document && !ex.document?.includes('http')) {
         ex.document = `https://fm.prod.marketa.id/uploads/${ex.document}`;
       }
+      if (ex?.caraPemesanan?.valueText)
+        ex.caraPemesanan = ex?.caraPemesanan?.valueText || '';
+      if (ex?.catatan?.valueText) ex.catatan = ex?.catatan?.valueText || '';
+      if (ex?.dokumenPersyaratanKPR?.valueText)
+        ex.dokumenPersyaratanKPR = ex?.dokumenPersyaratanKPR?.valueText || '';
     });
     main.forEach((ex) => {
       ex.listTipe = pricelist?.filter((el) => el.main_pricelist_id === ex.id);
