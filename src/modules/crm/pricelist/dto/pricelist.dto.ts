@@ -13,7 +13,7 @@ import {
   ValidateNested,
   IsBoolean,
 } from 'class-validator';
-import { HasAtLeastOneSellTrue } from './pricelist.validator';
+import { HasAtLeastOneSellTrue, IsSellValid } from './pricelist.validator';
 
 export class GetPricelistDto {
   @ApiProperty({
@@ -46,8 +46,9 @@ class ListHargaDto {
   @IsBoolean()
   sell: boolean;
 
-  @ApiProperty({ example: 0 })
+  @ApiProperty({ example: 1000000 })
   @IsNumber()
+  @IsSellValid({ message: 'If sell is true, price must be greater than 0' })
   price: number;
 
   @ApiProperty({ example: 0 })
