@@ -340,12 +340,11 @@ export class PricelistService {
     const qProject = `SELECT p."id", p.name FROM cms_projects p WHERE p.id = '${projectId}'`;
     const project = await dbPocketbase({ q: qProject });
     if (!project) throw new BadRequestException(`Invalid projectId`);
-    const qFindSameName = `SELECT p.name FROM cms_main_pricelist p WHERE p.name = '${name}' AND p."projectId" = '${projectId}'`;
+    const qFindSameName = `SELECT p.name FROM cms_main_pricelist p WHERE p.name = '${name?.trim()}' AND p."projectId" = '${projectId}'`;
     const qPaymentTypes = `SELECT pt.id, pt.name FROM cms_payment_types pt`;
     const qClusterType = `
     SELECT
-      u."clusterId",
-      u."homeDesignId",
+      u."clusterId" || '-' || u."homeDesignId" AS id,
       c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name
     FROM cms_units u
     JOIN cms_clusters c ON u."clusterId" = c.id
@@ -365,8 +364,54 @@ export class PricelistService {
     if (sameName) throw new BadRequestException(`Nama tidak tersedia`);
 
     const paymentTypes = getPaymentTypes?.map((ex) => ex.id);
+    let main_pricelist_id = '';
 
-    console.log(clusterType, 'paymentTypes');
+    for (let i = 0; i < listTipe.length; i++) {
+      const element = listTipe[i];
+      const dataPricelist = {
+        main_pricelist_id: main_pricelist_id,
+        pricelistName: name?.trim() + ' ' + element?.name?.trim(),
+        takeEffectDate: new Date(),
+        kprInterestSimulation: simulasiPerkiraanBungaKPR,
+        durationKprSimulation: simulasiLamaCicilanKPR,
+        homeTypeAmount: clusterType.length,
+        status: 'Active',
+        projectId: projectId,
+        nup: element.amount,
+        paymentTypes: paymentTypes,
+        typeNUP: element.typeNUP === 'NUP' ? 'NUP' : 'BOOKING_FEE',
+        documentPriceList: {
+          filename: element?.document?.trim().split('/')?.[
+            element?.document?.trim()?.split('/').length - 1
+          ],
+          uploadRelativePath: element?.document
+            ?.trim()
+            ?.includes('https://fm.prod.marketa.id/uploads/')
+            ? element?.document
+                ?.trim()
+                ?.split('https://fm.prod.marketa.id/uploads/')?.[1] || ''
+            : element?.document?.trim(),
+        },
+        detail: {
+          name: element?.name?.trim() || '',
+          type:
+            element?.name?.trim()?.split(' ')?.join('')?.toUpperCase() || '',
+          howToOrder: {
+            valueHtml: element.caraPemesanan || '',
+            valueText: element.caraPemesanan || '',
+          },
+          notes: {
+            valueHtml: element.catatan || '',
+            valueText: element.catatan || '',
+          },
+          requirementDocumentKpr: {
+            valueHtml: element.dokumenPersyaratanKPR || '',
+            valueText: element.dokumenPersyaratanKPR || '',
+          },
+        },
+      };
+      console.log(dataPricelist, 'dataPricelist');
+    }
 
     // const updateMain = await crmUpdate({
     //   collection: 'cms_main_pricelist',
