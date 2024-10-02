@@ -84,11 +84,9 @@ export class PricelistService {
       if (ex.document && !ex.document?.includes('http')) {
         ex.document = `https://fm.prod.marketa.id/uploads/${ex.document}`;
       }
-      if (ex?.caraPemesanan?.valueText)
-        ex.caraPemesanan = ex?.caraPemesanan?.valueText || '';
-      if (ex?.catatan?.valueText) ex.catatan = ex?.catatan?.valueText || '';
-      if (ex?.dokumenPersyaratanKPR?.valueText)
-        ex.dokumenPersyaratanKPR = ex?.dokumenPersyaratanKPR?.valueText || '';
+      ex.caraPemesanan = ex?.caraPemesanan?.valueText || '';
+      ex.catatan = ex?.catatan?.valueText || '';
+      ex.dokumenPersyaratanKPR = ex?.dokumenPersyaratanKPR?.valueText || '';
     });
     main.forEach((ex) => {
       ex.listTipe = pricelist?.filter((el) => el.main_pricelist_id === ex.id);
