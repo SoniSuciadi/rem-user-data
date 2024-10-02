@@ -58,7 +58,7 @@ export class PricelistService {
     SELECT
       p.id,
       p.sell,
-      c.name || ' (' || hd."typeUnit" || ')' AS name,
+      c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name,
       COALESCE(json_extract(p."detailClusterAndUnit", '$.listingPrice'), 0) AS "price",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.kprCosts'), 0) AS "kprCosts",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.notaryFee'), 0) AS "notaryFee",
@@ -143,7 +143,7 @@ export class PricelistService {
       SELECT
         u."clusterId",
         u."homeDesignId",
-        c.name || ' (' || hd."typeUnit" || ')' AS name
+        c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name,
       FROM cms_units u
       JOIN cms_clusters c ON u."clusterId" = c.id
       JOIN cms_home_design hd ON u."homeDesignId" = hd.id
@@ -217,7 +217,7 @@ export class PricelistService {
     const qClusterType = `
     SELECT
       p.sell,
-      c.name || ' (' || hd."typeUnit" || ')' AS name,
+      c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name,
       COALESCE(json_extract(p."detailClusterAndUnit", '$.listingPrice'), 0) AS "price",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.kprCosts'), 0) AS "kprCosts",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.notaryFee'), 0) AS "notaryFee",
@@ -236,7 +236,7 @@ export class PricelistService {
     SELECT
       u."clusterId",
       u."homeDesignId",
-      c.name || ' (' || hd."typeUnit" || ')' AS name
+      c.name || ' - ' || hd."homeDesignName" || ' (' || hd."typeUnit" || ')' AS name,
     FROM cms_units u
     JOIN cms_clusters c ON u."clusterId" = c.id
     JOIN cms_home_design hd ON u."homeDesignId" = hd.id
