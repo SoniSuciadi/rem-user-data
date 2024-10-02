@@ -34,6 +34,7 @@ export class PricelistService {
     SELECT
       p.id,
       COALESCE(json_extract(p."detail", '$.name'), '') AS name,
+      COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS documentPriceList,
       p.nup AS "nup",
       p.main_pricelist_id
     FROM cms_pricelist p
@@ -67,6 +68,9 @@ export class PricelistService {
     );
     pricelist.forEach((ex) => {
       ex.listHarga = prices?.filter((el) => el.pricelistId === ex.id);
+      if (ex.documentPriceList && !ex.documentPriceList?.includes('http')) {
+        ex.documentPriceList = `https://fm.prod.marketa.id/uploads/${ex.documentPriceList}`;
+      }
     });
     main.forEach((ex) => {
       ex.listTipe = pricelist?.filter((el) => el.main_pricelist_id === ex.id);
@@ -117,9 +121,39 @@ export class PricelistService {
     if (findSameName && findSameName?.length)
       tempName = tempName + ` (${findSameName.length + 1})`;
 
+    const getClusterType = await dbPocketbase({
+      q: `
+      SELECT
+        u."clusterId",
+        u."homeDesignId",
+        c.name || ' (' || hd."typeUnit" || ')' AS name
+      FROM cms_units u
+      JOIN cms_clusters c ON u."clusterId" = c.id
+      JOIN cms_home_design hd ON u."homeDesignId" = hd.id
+      WHERE c."projectId" = '${projectId}'
+      GROUP BY u."clusterId", u."homeDesignId", c.name, hd."typeUnit";
+      `,
+    });
+    const listHarga = getClusterType?.map((ex) => {
+      return {
+        name: ex?.name,
+        id: `${ex?.clusterId}-${ex?.homeDesignId}`,
+        sell: false,
+        price: 0,
+        kprCosts: 0,
+        notaryFee: 0,
+      };
+    });
+
     return {
       name: tempName,
       projectId,
+      listTipe: [
+        {
+          name: 'Standart',
+          nup: 0,
+        },
+      ],
     };
   }
 
