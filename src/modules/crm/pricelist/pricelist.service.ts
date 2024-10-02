@@ -435,9 +435,32 @@ export class PricelistService {
       // console.log(dataPricelist, 'dataPricelist');
       for (let j = 0; j < clusterType.length; j++) {
         const el = clusterType[j];
+        const findPrice = element?.listHarga?.find((ex) => ex.id === el.id);
+
+        const dataCreatePrice = {
+          clusterId: el?.clusterId,
+          pricelistId: pricelistId,
+          sell: findPrice?.sell || false,
+          projectId: projectId,
+          homeDesignId: el?.homeDesignId,
+          detailClusterAndUnit: {
+            clusterId: el?.clusterId || '',
+            description: findPrice?.keterangan || '',
+            dpPrice: 0,
+            kprCosts: findPrice?.kprCosts || 0,
+            kprInstallment: 0,
+            listingPrice: findPrice?.price || 0,
+            name: el?.name,
+            notaryFee: findPrice?.notaryFee || 0,
+            plafondKpr: 0,
+            unitId: el?.homeDesignId || '',
+            unitType: el?.unitType || '',
+          },
+        };
+        console.log(dataCreatePrice, 'dataCreatePrice');
       }
     }
-    console.log(clusterType, 'clusterType');
+    // console.log(clusterType, 'clusterType');
 
     // const updateMain = await crmUpdate({
     //   collection: 'cms_main_pricelist',
