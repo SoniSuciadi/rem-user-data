@@ -87,8 +87,6 @@ export class PricelistService {
     const abbreviation = project?.[0]?.abbreviation;
     if (!abbreviation) throw new BadRequestException(`Proyek tidak ada`);
 
-    console.log(project);
-
     const months = [
       'Januari',
       'Februari',
