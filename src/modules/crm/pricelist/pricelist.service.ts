@@ -335,6 +335,7 @@ export class PricelistService {
       name,
       simulasiPerkiraanBungaKPR,
       simulasiLamaCicilanKPR,
+      listTipe,
     } = arg;
     const project = await dbPocketbase({
       q: `
