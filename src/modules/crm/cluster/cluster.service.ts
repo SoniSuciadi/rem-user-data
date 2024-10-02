@@ -6,6 +6,7 @@ export class ClusterService {
   async getClusters() {
     const q = `
     SELECT
+      c.id,
       c."name",
       p."name" AS "project",
       COALESCE(s."stageName", '') AS "tahap"

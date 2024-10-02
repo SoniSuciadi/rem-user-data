@@ -6,6 +6,7 @@ export class HomeDesignService {
   async gethomeDesign() {
     const q = `
     SELECT
+      hd.id,
       hd."homeDesignName" AS "name",
       hd."typeUnit" AS "Tipe"
     FROM cms_home_design hd
