@@ -77,6 +77,18 @@ export class PricelistService {
 
   async getFormPricelist(arg: GetFormPricelist) {
     const { projectId } = arg;
+
+    const project = await dbPocketbase({
+      q: `SELECT 
+            p."abbreviation" 
+          FROM cms_projects p 
+          WHERE p.id = '${projectId}'`,
+    });
+    const abbreviation = project?.[0]?.abbreviation;
+    if (!abbreviation) throw new BadRequestException(`Proyek tidak ada`);
+
+    console.log(project);
+
     const months = [
       'Januari',
       'Februari',
@@ -93,7 +105,19 @@ export class PricelistService {
     ];
     const currentDate = new Date();
     const currentMonthIndex = currentDate.getMonth(); // Mengambil index bulan (0-11)
-    const tempName = 'Pricelist ' + months[currentMonthIndex];
+    const year = currentDate.getFullYear();
+    let tempName = `PL ${abbreviation} ${months[currentMonthIndex]} ${year}`;
+    const findSameName = await dbPocketbase({
+      q: `
+      SELECT 
+        p.name 
+      FROM cms_main_pricelist p
+      WHERE p."projectId" = '${projectId}'
+        AND p.name LIKE '%${tempName}%'
+    `,
+    });
+    if (findSameName && findSameName?.length)
+      tempName = tempName + ` (${findSameName.length + 1})`;
 
     return {
       name: tempName,
@@ -108,6 +132,6 @@ export class PricelistService {
     SELECT p."*" FROM cms_projects p WHERE p.id = '${projectId}'
     `,
     });
-    if (project) throw new BadRequestException(``);
+    if (!project) throw new BadRequestException(``);
   }
 }
