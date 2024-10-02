@@ -373,7 +373,7 @@ export class PricelistService {
         const [clusterId, homeDesignId] = el.id.split('-');
         if (!isExist) {
           throw new BadRequestException(
-            `clusterId '${clusterId}' dan '${homeDesignId}' pada Tipe '${ex.name}' tidak tersedia pada Proyek ${project.name || ''}`,
+            `clusterId '${clusterId}' dan homeDesignId '${homeDesignId}' pada Tipe '${ex.name}' tidak tersedia pada Proyek ${project?.[0]?.name || ''}`,
           );
         }
       });
