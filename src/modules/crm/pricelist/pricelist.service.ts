@@ -70,6 +70,12 @@ export class PricelistService {
     JOIN cms_clusters c ON p."clusterId" = c.id
     JOIN cms_home_design hd ON p."homeDesignId" = hd.id
     WHERE pricelist."projectId" = '${projectId}'
+    ORDER BY 
+      CASE 
+          WHEN p.sell = true THEN 1
+          ELSE 4
+      END,
+      c.name, hd."homeDesignName", hd."typeUnit"
     `;
 
     const queryDBParallelResult = await Promise.allSettled([
@@ -148,7 +154,8 @@ export class PricelistService {
       JOIN cms_clusters c ON u."clusterId" = c.id
       JOIN cms_home_design hd ON u."homeDesignId" = hd.id
       WHERE c."projectId" = '${projectId}'
-      GROUP BY u."clusterId", u."homeDesignId", c.name, hd."typeUnit";
+      GROUP BY u."clusterId", u."homeDesignId", c.name, hd."typeUnit"
+      ORDER BY c.name, hd."homeDesignName", hd."typeUnit"
       `,
     });
     const listHarga = getClusterType?.map((ex) => {
@@ -230,6 +237,12 @@ export class PricelistService {
     JOIN cms_clusters c ON p."clusterId" = c.id
     JOIN cms_home_design hd ON p."homeDesignId" = hd.id
     WHERE pricelist."main_pricelist_id" = '${pricelistId}'
+    ORDER BY 
+      CASE 
+          WHEN p.sell = true THEN 1
+          ELSE 4
+      END,
+      c.name, hd."homeDesignName", hd."typeUnit"
     `;
 
     const qClusterTypeProject = `
@@ -241,7 +254,8 @@ export class PricelistService {
     JOIN cms_clusters c ON u."clusterId" = c.id
     JOIN cms_home_design hd ON u."homeDesignId" = hd.id
     WHERE c."projectId" = '${projectId}'
-    GROUP BY u."clusterId", u."homeDesignId", c.name, hd."typeUnit";
+    GROUP BY u."clusterId", u."homeDesignId", c.name, hd."typeUnit"
+    ORDER BY c.name, hd."homeDesignName", hd."typeUnit"
   `;
 
     const queryDBParallelResult = await Promise.allSettled([
