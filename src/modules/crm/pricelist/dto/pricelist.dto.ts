@@ -83,8 +83,15 @@ class ListTipeDto {
   @IsNumber()
   amount: number;
 
-  @ApiProperty({ example: 'NUP' })
+  @ApiProperty({
+    example: 'NUP',
+    enum: ['NUP', 'BOOKING FEE'],
+    description: 'Only allowed values are NUP or BOOKING FEE',
+  })
   @IsString()
+  @IsIn(['NUP', 'BOOKING FEE'], {
+    message: 'typeNUP must be either NUP or BOOKING FEE',
+  })
   typeNUP: string;
 
   @ApiProperty({
