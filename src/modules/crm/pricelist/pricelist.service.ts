@@ -59,6 +59,7 @@ export class PricelistService {
       COALESCE(json_extract(p."detailClusterAndUnit", '$.kprCosts'), 0) AS "kprCosts",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.notaryFee'), 0) AS "notaryFee",
       COALESCE(json_extract(p."detailClusterAndUnit", '$.dpPrice'), 0) AS "dpPrice",
+      COALESCE(json_extract(p."detailClusterAndUnit", '$.description'), '') AS "keterangan",
       p."pricelistId"
     FROM cms_cluster_and_units_pricelist p
     JOIN cms_pricelist pricelist ON p."pricelistId" = pricelist.id
@@ -151,6 +152,7 @@ export class PricelistService {
         price: 0,
         kprCosts: 0,
         notaryFee: 0,
+        keterangan: '',
       };
     });
 
@@ -162,7 +164,8 @@ export class PricelistService {
       listTipe: [
         {
           name: 'Standart',
-          nup: 0,
+          amount: 0,
+          typeNUP: 'NUP',
           document: '',
           listHarga,
         },
