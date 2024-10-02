@@ -13,6 +13,7 @@ import {
   ValidateNested,
   IsBoolean,
   Max,
+  Min,
 } from 'class-validator';
 import { HasAtLeastOneSellTrue, IsSellValid } from './pricelist.validator';
 
@@ -132,12 +133,14 @@ export class CreatePricelistDto {
     example: 'PL TLR Oktober 2024',
   })
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({
     example: '${projectId}',
   })
   @IsString()
+  @IsNotEmpty()
   projectId: string;
 
   @ApiProperty({
@@ -145,6 +148,8 @@ export class CreatePricelistDto {
   })
   @IsNumber()
   @Max(100)
+  @Min(1)
+  @IsNotEmpty()
   simulasiPerkiraanBungaKPR: number;
 
   @ApiProperty({
@@ -156,9 +161,11 @@ export class CreatePricelistDto {
   @IsIn([5, 10, 15, 20, 25], {
     message: 'Only allowed values are 5, 10, 15, 20, 25',
   })
+  @IsNotEmpty()
   simulasiLamaCicilanKPR: number;
 
   @ApiProperty({ type: [ListTipeDto] })
+  @IsNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ListTipeDto)
