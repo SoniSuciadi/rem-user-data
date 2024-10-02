@@ -365,6 +365,10 @@ export class PricelistService {
       (result) => (result.status === 'fulfilled' ? result.value : []),
     );
     if (sameName) throw new BadRequestException(`Nama tidak tersedia`);
+    if (!clusterType)
+      throw new BadRequestException(
+        `Tidak ada unit pada Proyek ${project?.[0]?.name || ''}`,
+      );
 
     // validasi clusterId dan homeDesignId
     listTipe.forEach((ex) => {
@@ -429,6 +433,9 @@ export class PricelistService {
         },
       };
       // console.log(dataPricelist, 'dataPricelist');
+      for (let j = 0; j < clusterType.length; j++) {
+        const el = clusterType[j];
+      }
     }
     console.log(clusterType, 'clusterType');
 
