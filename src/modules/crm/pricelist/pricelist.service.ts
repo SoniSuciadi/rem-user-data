@@ -34,7 +34,7 @@ export class PricelistService {
     SELECT
       p.id,
       COALESCE(json_extract(p."detail", '$.name'), '') AS name,
-      COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS "documentPriceList",
+      COALESCE(json_extract(p."documentPriceList", '$.uploadRelativePath'), '') AS "document",
       p.nup AS "nup",
       p.main_pricelist_id
     FROM cms_pricelist p
@@ -68,8 +68,8 @@ export class PricelistService {
     );
     pricelist.forEach((ex) => {
       ex.listHarga = prices?.filter((el) => el.pricelistId === ex.id);
-      if (ex.documentPriceList && !ex.documentPriceList?.includes('http')) {
-        ex.documentPriceList = `https://fm.prod.marketa.id/uploads/${ex.documentPriceList}`;
+      if (ex.document && !ex.document?.includes('http')) {
+        ex.document = `https://fm.prod.marketa.id/uploads/${ex.document}`;
       }
     });
     main.forEach((ex) => {
