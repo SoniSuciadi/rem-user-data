@@ -3,10 +3,34 @@ import { CreateTahapDto, GetTahapDto } from './dto/tahap.dto';
 import { BadRequestException } from '@nestjs/common';
 
 export class TahapService {
-  async findAll() {}
+  async findAll() {
+    const items = await dbPocketbase({
+      q: `
+      SELECT 
+        s."stageName" AS "name",
+        p."name" AS "proyek"
+      FROM cms_stages s
+      JOIN cms_projects p ON s."projectId" = p.id
+      ORDER BY p."name", s."stageName"
+      `,
+    });
+    return items;
+  }
 
   async findByProjectId(params: GetTahapDto) {
     const { projectId } = params;
+    const items = await dbPocketbase({
+      q: `
+      SELECT 
+        s."stageName" AS "name",
+        p."name" AS "proyek"
+      FROM cms_stages s
+      JOIN cms_projects p ON s."projectId" = p.id
+      WHERE s."projectId" = '${projectId}'
+      ORDER BY s."stageName"
+      `,
+    });
+    return items;
   }
 
   async create(arg: CreateTahapDto) {
