@@ -175,3 +175,72 @@ export class CreatePricelistDto {
   @Type(() => ListTipeDto)
   listTipe: ListTipeDto[];
 }
+
+class ListHargaGetDto {
+  @ApiProperty({ example: 'zp6zo95xvv3ahqi-2kuyk00f5ey6hw1' })
+  id: string;
+
+  @ApiProperty({ example: 'Ringed City - Testing IT (2) (30/60)' })
+  name: string;
+
+  @ApiProperty({ example: true })
+  sell: boolean;
+
+  @ApiProperty({ example: 200000000 })
+  price: number;
+
+  @ApiProperty({ example: 10000000 })
+  kprCosts: number;
+
+  @ApiProperty({ example: 10000000 })
+  notaryFee: number;
+
+  @ApiProperty({ example: 'Test API' })
+  keterangan: string;
+}
+
+class ListTipeGetDto {
+  @ApiProperty({ example: 'Standart' })
+  name: string;
+
+  @ApiProperty({ example: 1000000 })
+  amount: number;
+
+  @ApiProperty({ example: 'NUP' })
+  typeNUP: string;
+
+  @ApiProperty({
+    example:
+      'https://fm.prod.marketa.id/uploads/cms/pricelist/pricelist-gm-sukabumi-juni-2023.jpg',
+  })
+  document: string;
+
+  @ApiProperty({ example: 'Test API' })
+  caraPemesanan: string;
+
+  @ApiProperty({ example: 'Test API' })
+  catatan: string;
+
+  @ApiProperty({ example: 'Test API' })
+  dokumenPersyaratanKPR: string;
+
+  @ApiProperty({ type: [ListHargaGetDto] })
+  listHarga: ListHargaGetDto[];
+}
+
+export class GetPricelistResponseDto {
+  @ApiProperty({ example: 'PL Oktober 2024 API Duplikat' })
+  name: string;
+
+  @ApiProperty({ example: '000vt8llbk3fn9v' })
+  projectId: string;
+
+  @ApiProperty({ example: 10 })
+  simulasiPerkiraanBungaKPR: number;
+
+  @ApiProperty({ example: 5 })
+  simulasiLamaCicilanKPR: number;
+
+  @ApiProperty({ type: [ListTipeGetDto] })
+  listTipe: ListTipeGetDto[];
+}

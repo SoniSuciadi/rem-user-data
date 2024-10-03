@@ -5,7 +5,9 @@ import {
   GetFormPricelist,
   GetFormPricelistById,
   GetPricelistDto,
+  GetPricelistResponseDto,
 } from './dto/pricelist.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('crm/pricelist')
 export class PricelistController {
@@ -21,6 +23,11 @@ export class PricelistController {
   }
 
   @Get('form-create/:projectId')
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: GetPricelistResponseDto,
+  })
   async getFormPricelist(@Param() params: GetFormPricelist) {
     const data = await this.PricelistService.getFormPricelist(params);
     return {
@@ -29,6 +36,11 @@ export class PricelistController {
   }
 
   @Get('form-duplicate/:pricelistId')
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: GetPricelistResponseDto,
+  })
   async getFormPricelistById(@Param() params: GetFormPricelistById) {
     const data = await this.PricelistService.getFormPricelistById(params);
     return {
