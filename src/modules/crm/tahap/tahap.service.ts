@@ -32,6 +32,7 @@ export class TahapService {
       ORDER BY s."stageName"
       `,
     });
+    if(!items) throw new BadRequestException(`Invalid projectId`);
     return items;
   }
 
