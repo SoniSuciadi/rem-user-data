@@ -11,6 +11,7 @@ import {
   IsOptional,
   ValidateNested,
   IsBoolean,
+  Min,
 } from 'class-validator';
 
 export class GetTahapDto {
@@ -34,6 +35,7 @@ export class CreateTahapDto {
     example: 1,
   })
   @IsNumber()
+  @Min(1)
   @IsNotEmpty()
   stage: number;
 }
