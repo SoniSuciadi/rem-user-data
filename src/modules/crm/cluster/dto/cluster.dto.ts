@@ -34,3 +34,25 @@ export class CreateClusterDto {
   @IsString()
   stageId: string;
 }
+
+export class ClusterDto {
+  @ApiProperty({ example: 'inoqa6wyyb6nkws' })
+  id: string;
+
+  @ApiProperty({ example: 'Arsana Village' })
+  name: string;
+
+  @ApiProperty({ example: 'Arsana Village' })
+  project: string;
+
+  @ApiProperty({ example: 1 })
+  tahap: number | string;
+}
+
+export class GetClustersResponseDto {
+  @ApiProperty({ example: 'Success get list crm clusters' })
+  message: string;
+
+  @ApiProperty({ type: [ClusterDto] })
+  data: ClusterDto[];
+}
