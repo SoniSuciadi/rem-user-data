@@ -197,3 +197,22 @@ export class CreateHomeDesignDto {
   @IsString()
   mainPictureUrl: string;
 }
+
+export class HomeDesignDto {
+  @ApiProperty({ example: 'Tipe 27/60' })
+  Tipe: string;
+
+  @ApiProperty({ example: '000000000000001' })
+  id: string;
+
+  @ApiProperty({ example: 'Tipe 27/60' })
+  name: string;
+}
+
+export class GetHomeDesignResponseDto {
+  @ApiProperty({ example: 'Success get list crm home design' })
+  message: string;
+
+  @ApiProperty({ type: [HomeDesignDto] })
+  data: HomeDesignDto[];
+}
