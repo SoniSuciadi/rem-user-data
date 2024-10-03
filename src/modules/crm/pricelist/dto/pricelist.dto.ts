@@ -244,3 +244,37 @@ export class GetPricelistResponseDto {
   @ApiProperty({ type: [ListTipeGetDto] })
   listTipe: ListTipeGetDto[];
 }
+
+class PricelistDto {
+  @ApiProperty({ example: '5mhhzukf6m4m74j' })
+  id: string;
+
+  @ApiProperty({ example: 'PL Oktober 2024 API' })
+  name: string;
+
+  @ApiProperty({ example: '2024-10-02 11:37:20.000Z' })
+  startDate: string;
+
+  @ApiProperty({ example: '' })
+  endDate: string;
+
+  @ApiProperty({ example: 5 })
+  simulasiLamaCicilanKPR: number;
+
+  @ApiProperty({ example: 10 })
+  simulasiPerkiraanBungaKPR: number;
+
+  @ApiProperty({ example: 'Aktif' })
+  status: string;
+
+  @ApiProperty({ type: [ListTipeGetDto] })
+  listTipe: ListTipeGetDto[];
+}
+
+export class GetCrmPricelistResponseDto {
+  @ApiProperty({ example: 'Success get list crm pricelist' })
+  message: string;
+
+  @ApiProperty({ type: [PricelistDto] })
+  data: PricelistDto[];
+}

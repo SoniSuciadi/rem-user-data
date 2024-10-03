@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PricelistService } from './pricelist.service';
 import {
   CreatePricelistDto,
+  GetCrmPricelistResponseDto,
   GetFormPricelist,
   GetFormPricelistById,
   GetPricelistDto,
@@ -14,6 +15,11 @@ export class PricelistController {
   constructor(private readonly PricelistService: PricelistService) {}
 
   @Get(':projectId')
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: GetCrmPricelistResponseDto,
+  })
   async getPricelist(@Param() params: GetPricelistDto) {
     const data = await this.PricelistService.getPricelist(params);
     return {
