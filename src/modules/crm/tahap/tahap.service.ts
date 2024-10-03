@@ -7,6 +7,7 @@ export class TahapService {
     const items = await dbPocketbase({
       q: `
       SELECT 
+        s.id,
         s."stageName" AS "name",
         p."name" AS "proyek"
       FROM cms_stages s
@@ -22,6 +23,7 @@ export class TahapService {
     const items = await dbPocketbase({
       q: `
       SELECT 
+        s.id,
         s."stageName" AS "name",
         p."name" AS "proyek"
       FROM cms_stages s
