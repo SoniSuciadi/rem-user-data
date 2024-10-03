@@ -1,0 +1,35 @@
+import { Body, Controller, Get, Post, Param } from '@nestjs/common';
+import { TahapService } from './tahap.service';
+import { CreateTahapDto, GetTahapDto } from './dto/tahap.dto';
+
+@Controller('crm/tahap')
+export class TahapController {
+  constructor(private readonly TahapService: TahapService) {}
+
+  @Get()
+  async findAll() {
+    const data = await this.TahapService.findAll();
+    return {
+      message: `Success get list crm tahap`,
+      data,
+    };
+  }
+
+  @Get(':projectId')
+  async findByProjectId(@Param() params: GetTahapDto) {
+    const data = await this.TahapService.findByProjectId(params);
+    return {
+      message: `Success get list crm tahap`,
+      data,
+    };
+  }
+
+  @Post()
+  async create(@Body() body: CreateTahapDto) {
+    const data = await this.TahapService.create(body);
+    return {
+      message: 'Success create crm tahap',
+      data,
+    };
+  }
+}
