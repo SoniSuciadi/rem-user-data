@@ -12,7 +12,7 @@ import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('crm/pricelist')
 export class PricelistController {
-  constructor(private readonly PricelistService: PricelistService) {}
+  constructor(private readonly pricelistService: PricelistService) {}
 
   @Get(':projectId')
   @ApiResponse({
@@ -21,7 +21,7 @@ export class PricelistController {
     type: GetCrmPricelistResponseDto,
   })
   async getPricelist(@Param() params: GetPricelistDto) {
-    const data = await this.PricelistService.getPricelist(params);
+    const data = await this.pricelistService.getPricelist(params);
     return {
       message: `Success get list crm pricelist`,
       data,
@@ -35,7 +35,7 @@ export class PricelistController {
     type: GetPricelistResponseDto,
   })
   async getFormPricelist(@Param() params: GetFormPricelist) {
-    const data = await this.PricelistService.getFormPricelist(params);
+    const data = await this.pricelistService.getFormPricelist(params);
     return {
       ...data,
     };
@@ -48,7 +48,7 @@ export class PricelistController {
     type: GetPricelistResponseDto,
   })
   async getFormPricelistById(@Param() params: GetFormPricelistById) {
-    const data = await this.PricelistService.getFormPricelistById(params);
+    const data = await this.pricelistService.getFormPricelistById(params);
     return {
       ...data,
     };
@@ -56,7 +56,7 @@ export class PricelistController {
 
   @Post()
   async createPricelist(@Body() body: CreatePricelistDto) {
-    const data = await this.PricelistService.createPricelist(body);
+    const data = await this.pricelistService.createPricelist(body);
     return {
       message: 'Success create crm pricelist',
       data,

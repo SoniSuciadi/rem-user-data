@@ -5,12 +5,16 @@ import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('crm/cluster')
 export class ClusterController {
-  constructor(private readonly ClusterService: ClusterService) {}
+  constructor(private readonly clusterService: ClusterService) {}
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Successful response', type: GetClustersResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: GetClustersResponseDto,
+  })
   async getClusters() {
-    const data = await this.ClusterService.getClusters();
+    const data = await this.clusterService.getClusters();
     return {
       message: 'Success get list crm clusters',
       data,
@@ -19,7 +23,7 @@ export class ClusterController {
 
   @Post()
   async createCluster(@Body() body: CreateClusterDto) {
-    const data = await this.ClusterService.createCluster(body);
+    const data = await this.clusterService.createCluster(body);
     return {
       message: 'Success create crm cluster',
       data,
