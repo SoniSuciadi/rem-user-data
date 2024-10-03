@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param } from '@nestjs/common';
 import { TahapService } from './tahap.service';
+import { CreateTahapDto, GetTahapDto } from './dto/tahap.dto';
 
 @Controller('crm/tahap')
 export class TahapController {
@@ -15,8 +16,8 @@ export class TahapController {
   }
 
   @Get(':projectId')
-  async findByProjectId() {
-    const data = await this.TahapService.findByProjectId();
+  async findByProjectId(@Param() params: GetTahapDto) {
+    const data = await this.TahapService.findByProjectId(params);
     return {
       message: `Success get list crm tahap`,
       data,
@@ -24,8 +25,8 @@ export class TahapController {
   }
 
   @Post()
-  async create() {
-    const data = await this.TahapService.create();
+  async create(@Body() body: CreateTahapDto) {
+    const data = await this.TahapService.create(body);
     return {
       message: 'Success create crm tahap',
       data,
