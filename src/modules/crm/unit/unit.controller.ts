@@ -1,12 +1,14 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UnitService } from './unit.service';
-import { CreateUnit, GetUnits } from './dto/unit.dto';
+import { CreateUnit, GetUnits, GetUnitsResponseDto } from './dto/unit.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('crm/unit')
 export class UnitController {
   constructor(private readonly UnitService: UnitService) {}
 
   @Get(':project/:cluster')
+  @ApiResponse({ status: 200, description: 'Successful response', type: GetUnitsResponseDto })
   async getUnit(@Param() params: GetUnits) {
     const data = await this.UnitService.getUnits(params);
     return {

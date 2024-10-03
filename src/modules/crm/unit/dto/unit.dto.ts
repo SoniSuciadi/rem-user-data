@@ -70,3 +70,28 @@ export class CreateUnit {
   //   @IsNotEmpty()
   //   status: string;
 }
+
+export class UnitDto {
+  @ApiProperty({ example: '36/90 (36/90)' })
+  TipeRumah: string;
+
+  @ApiProperty({ example: 'A' })
+  blok: string;
+
+  @ApiProperty({ example: 1 })
+  homeNumber: number;
+
+  @ApiProperty({ example: '000000000000776' })
+  id: string;
+
+  @ApiProperty({ example: 'Terjual' })
+  status: string;
+}
+
+export class GetUnitsResponseDto {
+  @ApiProperty({ example: 'Success get list crm Unit' })
+  message: string;
+
+  @ApiProperty({ type: [UnitDto] })
+  data: UnitDto[];
+}
