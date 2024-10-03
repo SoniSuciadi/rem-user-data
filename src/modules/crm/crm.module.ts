@@ -4,13 +4,15 @@ import { ClusterModule } from './cluster/cluster.module';
 import { PricelistModule } from './pricelist/pricelist.module';
 import { UnitModule } from './unit/unit.module';
 import { HomeDesignModule } from './homeDesign/homeDesign.module';
+import { TahapModule } from './tahap/tahap.module';
 
 @Module({
   imports: [
     ProjectModule,
+    TahapModule,
     ClusterModule,
-    PricelistModule,
     UnitModule,
+    PricelistModule,
     HomeDesignModule,
   ],
 })
