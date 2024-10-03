@@ -1,12 +1,14 @@
 import { Body, Controller, Get, Post, Param } from '@nestjs/common';
 import { TahapService } from './tahap.service';
-import { CreateTahapDto, GetTahapDto } from './dto/tahap.dto';
+import { CreateTahapDto, GetTahapDto, GetTahapResponseDto } from './dto/tahap.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('crm/tahap')
 export class TahapController {
   constructor(private readonly TahapService: TahapService) {}
 
   @Get()
+  @ApiResponse({ status: 200, description: 'Successful response', type: GetTahapResponseDto })
   async findAll() {
     const data = await this.TahapService.findAll();
     return {
