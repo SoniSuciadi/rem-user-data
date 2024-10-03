@@ -18,6 +18,7 @@ export class TahapController {
   }
 
   @Get(':projectId')
+  @ApiResponse({ status: 200, description: 'Successful response', type: GetTahapResponseDto })
   async findByProjectId(@Param() params: GetTahapDto) {
     const data = await this.TahapService.findByProjectId(params);
     return {
