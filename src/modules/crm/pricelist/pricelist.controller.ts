@@ -2,16 +2,24 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PricelistService } from './pricelist.service';
 import {
   CreatePricelistDto,
+  GetCrmPricelistResponseDto,
   GetFormPricelist,
   GetFormPricelistById,
   GetPricelistDto,
+  GetPricelistResponseDto,
 } from './dto/pricelist.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('crm/pricelist')
 export class PricelistController {
   constructor(private readonly PricelistService: PricelistService) {}
 
   @Get(':projectId')
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: GetCrmPricelistResponseDto,
+  })
   async getPricelist(@Param() params: GetPricelistDto) {
     const data = await this.PricelistService.getPricelist(params);
     return {
@@ -21,6 +29,11 @@ export class PricelistController {
   }
 
   @Get('form-create/:projectId')
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: GetPricelistResponseDto,
+  })
   async getFormPricelist(@Param() params: GetFormPricelist) {
     const data = await this.PricelistService.getFormPricelist(params);
     return {
@@ -29,6 +42,11 @@ export class PricelistController {
   }
 
   @Get('form-duplicate/:pricelistId')
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: GetPricelistResponseDto,
+  })
   async getFormPricelistById(@Param() params: GetFormPricelistById) {
     const data = await this.PricelistService.getFormPricelistById(params);
     return {

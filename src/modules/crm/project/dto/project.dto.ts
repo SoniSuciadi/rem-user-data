@@ -93,3 +93,25 @@ export class CreateProjectDto {
   @IsString()
   adminContact: string;
 }
+
+export class ProjectDto {
+  @ApiProperty({ example: 'AV' })
+  abbreviation: string;
+
+  @ApiProperty({ example: '000000000000005' })
+  id: string;
+
+  @ApiProperty({ example: false })
+  isExternal: boolean;
+
+  @ApiProperty({ example: 'Arsana Village' })
+  name: string;
+}
+
+export class GetProjectsResponseDto {
+  @ApiProperty({ example: 'Success get list crm projects' })
+  message: string;
+
+  @ApiProperty({ type: [ProjectDto] })
+  data: ProjectDto[];
+}

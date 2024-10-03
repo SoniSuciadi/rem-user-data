@@ -39,3 +39,22 @@ export class CreateTahapDto {
   @IsNotEmpty()
   stage: number;
 }
+
+export class TahapDto {
+  @ApiProperty({ example: 'b460r5djfl47x8v' })
+  id: string;
+
+  @ApiProperty({ example: 1 })
+  name: number;
+
+  @ApiProperty({ example: 'Arsana Village' })
+  proyek: string;
+}
+
+export class GetTahapResponseDto {
+  @ApiProperty({ example: 'Success get list crm tahap' })
+  message: string;
+
+  @ApiProperty({ type: [TahapDto] })
+  data: TahapDto[];
+}
